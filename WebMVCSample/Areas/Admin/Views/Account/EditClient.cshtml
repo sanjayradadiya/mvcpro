@@ -1,0 +1,290 @@
+﻿@model WebInventory.Areas.Admin.ViewModels.ClientEditProfileVM
+@{
+    ViewBag.Title = "EditClient";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+
+<style>
+    .logger {
+        font-weight: normal;
+        color: #808080;
+    }
+
+    .panel {
+        background-color: rgba(248, 248, 248, 0.78) !important;
+    }
+
+    .titlesbar {
+        padding: 1% 0%;
+        border-bottom: 3px double #7879e0;
+        margin-bottom: 1%;
+    }
+
+    .fa-titles {
+        float: left;
+        border: 2px solid #7879e0;
+        border-radius: 100%;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .profile {
+        padding: 10px;
+        background-color: #fff;
+        padding-left: 2%!important;
+        padding-right: 2%!important;
+        box-shadow: 0 5px 15px #0c0c0c;
+        border-radius: 4px;
+        box-shadow: 0 5px 15px rgb(191, 193, 255);
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        SetLoadingProc();
+        $.validator.addMethod("date", function (value, element) { var ok = true; try { $.datepicker.parseDate('dd-mm-yy', value); } catch (err) { ok = false; } return ok; });
+        /*$(".datefield").datepicker({ dateFormat: 'dd-mm-yy', changeMonth: true, changeYear: true, currentText: 'Now'  });*/
+        $('.date').datepicker({ /*startDate: new Date(),*/ format: "dd-mm-yyyy", todayHighlight: true, autoclose: true, });
+        RemoveLoadingProc();
+    });
+</script>
+<div class="container">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 profile">
+
+        <div class="col-md-12 titlesbar">
+            <div class="caption"><span class="fa-titles"><i class="fa fa-user"></i></span><span style="padding-right: 6px;"></span>@Model.Title. @Model.FirstName @Model.LastName  Profile</div>
+        </div>
+        <form id="frmPrimeProfile">
+            <div class="container-fulid">
+
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div class="col-md-12 divbtmborder spacer10">
+                                <div class="text-upper">
+                                    <h4>Personal details</h4>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-xs-3 -spacer5">
+                                @Html.LabelFor(model => model.LoginName, new { @class = "control-label" }) :
+                            </div>
+                            <div class="col-md-9 col-xs-9 spacer10">
+                                @Html.DisplayFor(model => model.LoginName, new { @class = "logger" })
+                                @Html.HiddenFor(model => model.LoginName, new { @class = "logger" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.Label("Full Name", new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-2 spacer10">
+                                @Html.DropDownListFor(model => model.Title, new SelectList(Model.ListTitles, "Value", "Text"), new { @class = "form-control profileTitle", Placeholder = "Title" })
+                            </div>
+                            <div class="col-md-5 spacer10">
+                                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control validate[required]", autocomplete = "off", data_errormessage = "First Name is required", Placeholder = "First Name*" })
+                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-5 spacer10">
+                                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control validate[required]", autocomplete = "off", data_errormessage = "Last Name is required", Placeholder = "Last Name*" })
+                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.LabelFor(model => model.CompanyNm, new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.TextBoxFor(model => model.CompanyNm, new { @class = "form-control validate[required]", data_errormessage = "Company Name is required" })
+                                @Html.ValidationMessageFor(model => model.CompanyNm, "", new { @class = "text-danger", autocomplete = "off", placeholder = "Current Company Name*" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.LabelFor(model => model.birthdate, new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.TextBoxFor(model => model.birthdate, "{0:dd/MM/yyyy}", new { @class = "form-control datefield validate[required]", placeholder = "dd-mm-yyyy", data_errormessage = "Birth date is required" })
+                                @Html.ValidationMessageFor(model => model.birthdate, "", new { @class = "text-danger", autocomplete = "off", placeholder = "Date of Birth*" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.LabelFor(model => model.Designation, new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.TextBoxFor(model => model.Designation, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Designation, "", new { @class = "text-danger", autocomplete = "off", placeholder = "Current Position*" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div class="col-md-12 divbtmborder spacer10">
+                                <div class="text-upper">
+                                    <h4>Trade details</h4>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 spacer10">
+                                @Html.Label("Is Approved?", new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-1 spacer10">
+                                @Html.CheckBox("status", @Model.statusFlag, new { @class = "checkbox", data_errormessage = "Client is not Apporved" })
+                            </div>
+
+                            <div class="col-md-3 spacer10">
+                                @Html.Label("User Level", new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-4 spacer10">
+                                @Html.DropDownListFor(model => model.UTypeVal, new SelectList(Model.ListUserLevels, "Value", "Text"), new { @class = "form-control  validate[required]", Placeholder = "User Type" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.Label("Handling Location", new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.DropDownListFor(model => model.handle_location, new SelectList(Model.ListHandlingLocation, "Value", "Text"), new { @class = "form-control validate[required]", Placeholder = "Location" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.Label("Sales Manager", new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.DropDownListFor(model => model.smid, new SelectList(Model.ListSalesMgr, "Value", "Text"), new { @class = "form-control", Placeholder = "Location" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.Label("Email Schedule", new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.DropDownListFor(model => model.emailstatus, new SelectList(Model.ListEmailType, "Value", "Text"), new { @class = "form-control  validate[required]", Placeholder = "Location" })
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-md-12 divbtmborder spacer10">
+                                <div class="text-upper">
+                                    <h4>Other Information</h4>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.LabelFor(model => model.ReferenceThrough, new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.TextBoxFor(model => model.ReferenceThrough, new { @class = "form-control", autocomplete = "off", data_errormessage = "Referee is required", placeholder = "Referee" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.LabelFor(model => model.Address, new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.TextAreaFor(model => model.Address, new { @class = "form-control", autocomplete = "off", placeholder = "Current Address" })
+                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-4 spacer10">
+                                @Html.TextBoxFor(model => model.City, new { @class = "form-control validate[required]", autocomplete = "off", data_errormessage = "City is required", placeholder = "City*" })
+                                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-4 spacer10">
+                                @Html.TextBoxFor(model => model.State, new { @class = "form-control validate[required]", autocomplete = "off", data_errormessage = "State is required", placeholder = "State*" })
+                                @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-4 spacer10">
+                                @Html.DropDownListFor(model => model.Country, new SelectList(Model.ListCountries, "Value", "Text"), "Country", new { @class = "form-control validate[required]", placeholder = "Country*", data_errormessage = "Select Country" })
+                                @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                            </div>
+
+
+                            @*<div class="col-md-12 -spacer5">
+                                @Html.LabelFor(model => model.Zipcode)
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.TextBoxFor(model => model.Zipcode, new { @class = "form-control", autocomplete = "off", data_errormessage = "Postal Code is required", onkeypress ="DecValid(event,this,8)", onkeyup ="DecValid(event,this,8)" , onpaste="return false;", ondrop="return false;"  })
+                                @Html.ValidationMessageFor(model => model.Zipcode, "", new { @class = "text-danger" })
+                            </div>*@
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.Label("Contact No")
+                            </div>
+                            @*<div class="col-md-2 spacer10">
+                                @Html.TextBoxFor(model => model.Phone_Countrycd, new { @class = "form-control validate[required,custom[integer]]", min = 10, data_errormessage = "Contry Code is required", autocomplete = "off", Placeholder = "CoutryCode*", onkeypress ="DecValid(event,this,3)", onkeyup ="DecValid(event,this,3)" , onpaste="return false;", ondrop="return false;" })
+                                @Html.ValidationMessageFor(model => model.Phone_Countrycd, "", new { @class = "text-danger" })
+                            </div>*@
+                            <div class="col-md-4 spacer10">
+                                @Html.TextBoxFor(model => model.Phone_STDcd, new { @class = "form-control validate[required,custom[integer]]", min = 10, data_errormessage = "Std Code is required", autocomplete = "off", Placeholder = "Std Code*", onkeypress = "DecValid(event,this,4)", onkeyup = "DecValid(event,this,6)", onpaste = "return false;", ondrop = "return false;" })
+                                @Html.ValidationMessageFor(model => model.Phone_STDcd, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-8 spacer10">
+                                @Html.TextBoxFor(model => model.Phone_No, new { @class = "form-control validate[required,custom[integer]]", min = 1000, data_errormessage = "Phone No is required", autocomplete = "off", Placeholder = "Phone No*", onkeypress = "DecValid(event,this,6)", onkeyup = "DecValid(event,this,10)", onpaste = "return false;", ondrop = "return false;" })
+                                @Html.ValidationMessageFor(model => model.Phone_No, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.Label("Mobile No")
+                            </div>
+                            @*<div class="col-md-4 spacer10">
+                                @Html.TextBoxFor(model => model.Mobile_CountryCd, new { @class = "form-control", min = 10, data_errormessage = "Mobile Country Code is required", autocomplete = "off", Placeholder = "Coutry Code", onkeypress ="DecValid(event,this,4)", onkeyup ="DecValid(event,this,4)" , onpaste="return false;", ondrop="return false;"  })
+                                @Html.ValidationMessageFor(model => model.Mobile_CountryCd)
+                            </div>*@
+                            <div class="col-md-12 spacer10">
+                                @Html.TextBoxFor(model => model.Mobile_No, new { @class = "form-control", min = 1000, data_errormessage = "Mobile No is required", autocomplete = "off", placeholder = "Mobile no.", onkeypress = "DecValid(event,this,8)", onkeyup = "DecValid(event,this,12)", onpaste = "return false;", ondrop = "return false;" })
+                                @Html.ValidationMessageFor(model => model.Mobile_No, "", new { @class = "text-danger" })
+                            </div>
+
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.LabelFor(model => model.Website)
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.TextBoxFor(model => model.Website, new { @class = "form-control", autocomplete = "off", placeholder = "http://" })
+                                @Html.ValidationMessageFor(model => model.Website, "", new { @class = "text-danger" })
+                            </div>
+
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.LabelFor(model => model.BusinessType, new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.DropDownListFor(model => model.BusinessType, new SelectList(Model.ListBusinessTypes, "Value", "Text"), "Select business type", new { @class = "form-control validate[required]", autocomplete = "off", data_errormessage = "Select business type" })
+                                @Html.ValidationMessageFor(model => model.BusinessType, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-md-12 -spacer5">
+                                @Html.LabelFor(model => model.skypeid, new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-12 spacer10">
+                                @Html.TextBoxFor(model => model.skypeid, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.skypeid, "", new { @class = "text-danger", autocomplete = "off" })
+                                @Html.HiddenFor(model => model.ClientCd)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-fluid text-right">
+                    <div class="col-md-12 panel-footer">
+                        <input id="btnPrimaryProfile" data-req-url="@Url.Action("UpdateClientProfile", "Account")" type="submit" value="Change" class="btn btn-themed" />
+                        @Html.ActionLink("Cancel", "EditClient", "Account", new { @class = "btn btn-default" })
+                    </div>
+                    <span class="process"></span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+<script src="~/Scripts/jquery-ui-1.10.2.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<link href="~/Content/validationEngine.jquery.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.validationEngine-en.js"></script>
+<script src="~/Scripts/jquery.validationEngine.js"></script>
+<script src="~/Scripts/Custom/account.js"></script>

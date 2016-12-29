@@ -1,0 +1,694 @@
+﻿@using WebInventory.Common;
+@{
+    ViewBag.Title = "Inventory Search";
+}
+
+<div class="container">
+    <h2><span class="invtitle">DIAMOND INVENTORY SEARCH</span></h2>
+</div>
+@Html.AntiForgeryToken()
+<div class="container shapeshadow">
+    <div id='shapes'>
+        @*@Html.Raw(string.Format("<div id='{0}' value='{0}' class='col-sm-1 shapes txt item active' data-toggle='tooltip' data-placement='top' title='{0}' style='line-height: 42px !important;'>", "SHAPE"))
+        @Html.Raw(string.Format("<strong>{0}</strong>", "SHAPE"))
+        @Html.Raw("</div>")*@
+        <div class="title col-xs-12 col-sm-1">
+            @Html.Label("Shape")
+        </div>
+        @*foreach (var item in ViewBag.Shapes as Dictionary<string, string>)*@
+        @foreach (var item in ViewData["Shape"] as Dictionary<string, string>)
+        {
+            string imageVpath = Server.MapPath(string.Format("~/Content/Images/{0}.png", item.Value));
+            string imagePath = Url.Content(string.Format("~/Content/Images/{0}.png", item.Value));
+            if (System.IO.File.Exists(@imageVpath))
+            {
+            @Html.Raw(string.Format("<div id='{0}' value='{0}' class='col-sm-1 shapes' data-toggle='tooltip' data-placement='top' title='{0}'>", item.Value));
+            @Html.Raw(string.Format("<img src='{0}' class='img-responsive' />", imagePath));
+            @Html.Raw("</div>");
+            }
+            /*else
+            {
+            @Html.Raw(string.Format("<div id='{0}' value='{0}' class='col-sm-1 shapes txt item active' data-toggle='tooltip' data-placement='top' title='{0}' style='line-height: 42px !important;'>", item.Value));
+            @Html.Raw(string.Format("<strong>{0}</strong>", item.Value));
+            }*/
+        }
+        @Html.Raw(string.Format("<div id='{0}' value='{0}' class='col-sm-1 shapes txt' data-toggle='tooltip' data-placement='top' title='{0}' style='line-height: 42px !important;'>", "FANCY"))
+        @Html.Raw(string.Format("<strong>{0}</strong>", "FANCY"))
+        @Html.Raw("</div>")
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="container">
+    <div class="row">
+        @*CARAT*@
+        <div class="tblRowL">
+            <h5>
+                @Html.Label("Carat", new { @class = "control-label" })
+            </h5>
+            <div class="divCts tblCont">
+                <div class="cont-select fCts">
+                    @Html.TextBox("FrmCts", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tCts">
+                    @Html.TextBox("ToCts", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                </div>
+                <button class="btn btn-default invselector invpopup cont-select-crt" onclick="return false;" data-target="#CtsModal">
+                    <i class="caret"></i>
+                </button>
+            </div>
+        </div>
+
+        @*CUT*@
+        <div class="tblRowR">
+            <h5>
+                @Html.Label("Cut", new { @class = "control-label" })
+            </h5>
+            <div class="divCut tblCont">
+                <div class="cont-select fCut">
+                    @Html.SelectorDropDownList("FrmCut", ViewData["Cut"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tCut">
+                    @Html.SelectorDropDownList("ToCut", ViewData["Cut"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <button class="btn btn-default invselector invpopup cont-select-crt" onclick="return false;" data-target="#CutModal">
+                    <i class="caret"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*COLOR*@
+        <div class="tblRowL">
+            <h5>
+                @Html.Label("Color", new { @class = "control-label" })
+            </h5>
+            <div class="divCol tblCont">
+                <div class="cont-select fCol">
+                    @*@Html.DropDownList("FrmColor", new SelectList(ViewData["Color"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "form-control" })*@
+                    @Html.SelectorDropDownList("FrmColor", ViewData["Color"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tCol">
+                    @*@Html.DropDownList("ToColor", new SelectList(ViewData["Color"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "form-control" })*@
+                    @Html.SelectorDropDownList("ToColor", ViewData["Color"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <button class="btn btn-default invselector invpopup cont-select-crt" onclick="return false;" data-target="#ColorModal">
+                    <i class="caret"></i>
+                </button>
+            </div>
+        </div>
+
+        @*POLISH*@
+        <div class="tblRowR">
+            <h5>
+                @Html.Label("Polish", new { @class = "control-label" })
+            </h5>
+            <div class="divPol tblCont">
+                <div class="cont-select fPol">
+                    @*@Html.DropDownList("FrmPolish", new SelectList(ViewData["Polish"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })*@
+                    @Html.SelectorDropDownList("FrmPolish", ViewData["Polish"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tPol">
+                    @Html.SelectorDropDownList("ToPolish", ViewData["Polish"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <button class="btn btn-default invselector invpopup cont-select-crt" onclick="return false;" data-target="#PolishModal">
+                    <i class="caret"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*CLARITY*@
+        <div class="tblRowL">
+            <h5>
+                @Html.Label("Clarity", new { @class = "control-label" })
+            </h5>
+            <div class="divClr tblCont">
+                <div class="cont-select fClr">
+                    @Html.SelectorDropDownList("FrmClarity", ViewData["Clarity"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tClr">
+                    @*@Html.DropDownList("ToClarity", new SelectList(ViewData["Clarity"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "form-control" })*@
+                    @Html.SelectorDropDownList("ToClarity", ViewData["Clarity"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <button class="btn btn-default invselector invpopup cont-select-crt" onclick="return false;" data-target="#ClarityModal">
+                    <i class="caret"></i>
+                </button>
+            </div>
+        </div>
+
+        @*SYM*@
+        <div class="tblRowR">
+            <h5>
+                @Html.Label("Sym", new { @class = "control-label" })
+            </h5>
+            <div class="divSym tblCont">
+                <div class="cont-select fSym">
+                    @*@Html.DropDownList("FrmSym", new SelectList(ViewData["Sym"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })*@
+                    @Html.SelectorDropDownList("FrmSym", ViewData["Sym"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tSym">
+                    @*@Html.DropDownList("ToSym", new SelectList(ViewData["Sym"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })*@
+                    @Html.SelectorDropDownList("ToSym", ViewData["Sym"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <button class="btn btn-default invselector invpopup cont-select-crt" onclick="return false;" data-target="#SymModal">
+                    <i class="caret"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*LOCATION*@
+        <div class="tblRowL">
+            <h5>
+                @Html.Label("Location", new { @class = "control-label" })
+            </h5>
+            <div class="divLoc tblCont">
+                <div class="cont-select fLoc">
+                    @Html.DropDownList("FrmLocation", new SelectList(ViewData["Location"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })
+                </div>
+                <span class="not-cont">
+                    @*LAB*@
+                    @Html.Label("Lab", new { @class = "control-label" })
+
+                </span>
+                <div class="cont-select fLab">
+                    @Html.DropDownList("FrmCertificate", new SelectList(ViewData["Certificate"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })
+                </div>
+            </div>
+            <div class="cont-select-crt"></div>
+        </div>
+
+        @*FLOURENCE*@
+        <div class="tblRowR">
+            <h5>
+                @Html.Label("Flourence", new { @class = "control-label" })
+            </h5>
+            <div class="divFl tblCont">
+                <div class="cont-select fFl">
+                    @*@Html.DropDownList("FrmFl", new SelectList(ViewData["Fl"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })*@
+                    @Html.SelectorDropDownList("FrmFl", ViewData["Fl"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tFl">
+                    @*@Html.DropDownList("ToFl", new SelectList(ViewData["Fl"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })*@
+                    @Html.SelectorDropDownList("ToFl", ViewData["Fl"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                </div>
+                <button class="btn btn-default invselector invpopup cont-select-crt" onclick="return false;" data-target="#FlModal">
+                    <i class="caret"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*$/CTS*@
+        <div class="tblRowL">
+            <h5>
+                @Html.Label("$/Cts", new { @class = "control-label" })
+            </h5>
+            <div class="divRate tblCont">
+                <div class="cont-select fRate">
+                    @Html.TextBox("FrmRate", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tRate">
+                    @Html.TextBox("ToRate", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                </div>
+                <div class="cont-select-crt">
+                </div>
+            </div>
+        </div>
+
+        @*STONEID*@
+        <div class="tblRowR">
+            <h5>
+                @Html.Label("Stock No", new { @class = "control-label" })
+            </h5>
+            <div class="divStockNo tblCont">
+                <div class="cont-full">
+                    @Html.TextBox("FrmStoneNo", null, new { @class = "invselector", Placeholder = "ENTER STONE NO" })
+                </div>
+                <div class="cont-select-crt">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*RAPARATE*@
+        <div class="tblRowL">
+            <h5>
+                @Html.Label("Rap ($)", new { @class = "control-label" })
+            </h5>
+            <div class="divRapa tblCont">
+                <div class="cont-select fRapa">
+                    @Html.TextBox("FrmRapa", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tRapa">
+                    @Html.TextBox("ToRapa", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                </div>
+                <div class="cont-select-crt">
+                </div>
+            </div>
+        </div>
+
+        @*CERTIFICATE NO*@
+        <div class="tblRowR">
+            <h5>
+                @Html.Label("Certi No", new { @class = "control-label" })
+            </h5>
+            <div class="divCertNo tblCont">
+                <div class="cont-full">
+                    @Html.TextBox("FrmCertNo", null, new { @class = "invselector", Placeholder = "ENTER CERTIFICATE NO" })
+                </div>
+                <div class="cont-select-crt">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*AMOUNT*@
+        <div class="tblRowL">
+            <h5>
+                @Html.Label("Amount", new { @class = "control-label" })
+            </h5>
+            <div class="divLen tblCont">
+                <div class="cont-select fLen">
+                    @Html.TextBox("FrmAmt", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                </div>
+                <span class="not-cont">To</span>
+                <div class="cont-select tLen">
+                    @Html.TextBox("ToAmt", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                </div>
+                <div class="cont-select-crt">
+                </div>
+            </div>
+        </div>
+
+        @*SHOW ONLY*@
+        <div class="tblRowR">
+            <h5>
+                @Html.Label("Show Only", new { @class = "control-label" })
+            </h5>
+            <div class="divGrdl tblCont">
+                <div class="cont-select fShowOnly">
+                    @Html.DropDownList("FrmShowOnly", new SelectList(ViewData["SHOW_ONLY"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })
+                </div>
+                <span class="not-cont">&nbsp;</span>
+                <div class="cont-select fSavedList">
+                    @Html.DropDownList("SavedList", new SelectList(ViewData["SAVED_LIST"] as IEnumerable<SelectListItem>, "Value", "Text"), "SAVED LIST", new { @class = "invselector" })
+                </div>
+                <div class="cont-select-crt">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="advsearch" data-toggle="collapse" data-target="#avdsearch" reference="avdsearch">
+        <span>+ ADVANCE OPTION +</span>
+    </div>
+
+    <div id="avdsearch" class="collapse">
+        <div class="row">
+            @*LENGTH*@
+            <div class="tblRowL">
+                <h5>
+                    @Html.Label("Length", new { @class = "control-label" })
+                </h5>
+                <div class="divLen tblCont">
+                    <div class="cont-select fLen">
+                        @Html.TextBox("FrmLength", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <span class="not-cont">To</span>
+                    <div class="cont-select tLen">
+                        @Html.TextBox("ToLength", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <div class="cont-select-crt">
+                    </div>
+                </div>
+            </div>
+
+            @*GIRDLE*@
+            <div class="tblRowR">
+                <h5>
+                    @Html.Label("Girdle", new { @class = "control-label" })
+                </h5>
+                <div class="divGrdl tblCont">
+                    <div class="cont-select fGrdl">
+                        @Html.SelectorDropDownList("FrmGirdle", ViewData["Girdle"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                    </div>
+                    <span class="not-cont">To</span>
+                    <div class="cont-select tGrdl">
+                        @Html.SelectorDropDownList("ToGirdle", ViewData["Girdle"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                    </div>
+                    <div class="cont-select-crt">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            @*WIDTH*@
+            <div class="tblRowL">
+                <h5>
+                    @Html.Label("Width", new { @class = "control-label" })
+                </h5>
+                <div class="divWidth tblCont">
+                    <div class="cont-select fWidth">
+                        @Html.TextBox("FrmWidth", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <span class="not-cont">To</span>
+                    <div class="cont-select tWidth">
+                        @Html.TextBox("ToWidth", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <div class="cont-select-crt">
+                    </div>
+                </div>
+            </div>
+
+            @*CULET*@
+            <div class="tblRowR">
+                <h5>
+                    @Html.Label("Culet", new { @class = "control-label" })
+                </h5>
+                <div class="divCul tblCont">
+                    <div class="cont-select fCul">
+                        @*@Html.DropDownList("FrmCulet", new SelectList(ViewData["Culet"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })*@
+                        @Html.SelectorDropDownList("FrmCulet", ViewData["Culet"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                    </div>
+                    <span class="not-cont">To</span>
+                    <div class="cont-select tCul">
+                        @*@Html.DropDownList("ToCulet", new SelectList(ViewData["Culet"] as Dictionary<string, string>, "Value", "Key"), "ANY", new { @class = "invselector" })*@
+                        @Html.SelectorDropDownList("ToCulet", ViewData["Culet"] as IEnumerable<SelectListCodeItem>, new { @class = "invselector" }, "ANY")
+                    </div>
+                    <div class="cont-select-crt">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @*HEIGHT*@
+            <div class="tblRowL">
+                <h5>
+                    @Html.Label("Height", new { @class = "control-label" })
+                </h5>
+                <div class="divHeight tblCont">
+                    <div class="cont-select fHeight">
+                        @Html.TextBox("FrmHeight", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <span class="not-cont">To</span>
+                    <div class="cont-select tHeight">
+                        @Html.TextBox("ToHeight", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <div class="cont-select-crt">
+                    </div>
+                </div>
+            </div>
+
+            @*DEPTH%*@
+            <div class="tblRowR">
+                <h5>
+                    @Html.Label("Depth (%)", new { @class = "control-label" })
+                </h5>
+                <div class="divDepth tblCont">
+                    <div class="cont-select fDepth">
+                        @Html.TextBox("FrmDepthPer", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <span class="not-cont">To</span>
+                    <div class="cont-select tDepth">
+                        @Html.TextBox("ToDepthPer", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <div class="cont-select-crt">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @*RATIO*@
+            <div class="tblRowL">
+                <h5>
+                    @Html.Label("Ratio", new { @class = "control-label" })
+                </h5>
+                <div class="divTab tblCont">
+                    <div class="cont-select fRatio">
+                        @Html.TextBox("FrmRatio", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <span class="not-cont">To</span>
+                    <div class="cont-select tRatio">
+                        @Html.TextBox("ToRatio", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <div class="cont-select-crt">
+                    </div>
+                </div>
+            </div>
+
+            @*TABLE%*@
+            <div class="tblRowR">
+                <h5>
+                    @Html.Label("Table (%)", new { @class = "control-label" })
+                </h5>
+                <div class="divTab tblCont">
+                    <div class="cont-select fTab">
+                        @Html.TextBox("FrmTablePer", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <span class="not-cont">To</span>
+                    <div class="cont-select tTab">
+                        @Html.TextBox("ToTablePer", null, new { @class = "invselector", placeholder = "ANY", onkeypress = "validateDeci(event,this)" })
+                    </div>
+                    <div class="cont-select-crt">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            @*TABLE%*@
+            <div class="tblRowR tblRowRavdsearch">
+                <ul class="nav nav-pills" style="float: right;">
+                    @*<li>
+                        <a id="btnUiSaveList" class="matchPar invpopup footerMidSerch" data-target="#SaveSrcModal"><i class="fa fa-save" style="color: white; padding-right: 4px;"></i>View Lists</a>
+                    </li>*@
+                    <li>
+                        <a id="btnUiSaveSearch" class="matchPar invpopup footerMidSerch" data-target="#SaveSrcModal"><i class="fa fa-save" style="color: white; padding-right: 4px;"></i>Save Search</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container navbar-fixed-bottom searchfixed">
+        <div class="tblRowL tblRowLsave">
+            <ul class="nav nav-pills" style="float: right;">
+                @*<li>
+                    <a id="btnSaveList" class="matchPar footerMidSerch" data-target="#SaveSrcModal"><i class="fa fa-save" style="color: white; padding-right: 4px;"></i>Saved List</a>
+                </li>*@
+                <li>
+                    <a id="btnSaveSearch" class="matchPar invpopup footerMidSerch" data-target="#SaveSrcModal"><i class="fa fa-save" style="color: white; padding-right: 4px;"></i>Save Search</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tblRowR tblRowRsave">
+            <ul class="nav nav-pills" style="float: right;">
+                <li>
+                    <a id="btnsearch" class="matchPar footerMidSerch" data-requesturl="@Url.Action("Index", "InventoryResults")"><i class="fa fa-search" style="color: white; padding-right: 4px;"></i>Search</a>
+                </li>
+                <li>&nbsp;</li>
+                <li>
+                    <a id="btnreset" class="saveRes" style="cursor:pointer" data-request-url="@Url.Action("IndexReset", "InventorySearch")"><i class="fa fa-refresh" style="color: white; padding-right: 4px;"></i>Reset</a>
+                </li>
+                <li><span style="margin-right: 2%; color: white; float: right;">.</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div id="CtsModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">Carats (From/To)</div>
+            <div class="popupcenter">
+                <div class="modal-body">
+                    <div id="TextBoxContainer" class="invtextdiv" style="width: 93%;">
+                        <div class="col-sm-4 col-xs-4">
+                            <input name="txt1" type="text" style="width: 62px;" class="form-control" onkeypress="validateDeci(event,this)" />
+                        </div>
+                        <div class="col-sm-4 col-xs-4">
+                            <input name="txt2" type="text" style="width: 62px;" class="form-control" onkeypress="validateDeci(event,this)" onblur="chkPreVal(this,'txt1')" />
+                        </div>
+                        <div class="col-sm-1 col-xs-1">
+                            <input type="button" value="+" class="btn" onclick="AddTextBox()" />
+                        </div>
+                        <div class="col-sm-1 col-xs-1"></div>
+                        <div class="col-sm-1 col-xs-1">
+                            <input type="button" value="x" class="btn" />
+                        </div>
+                    </div>
+                    <div id="multiTextBoxContainer" class="multiTextsContainer" style="width: 100%; padding-top: 0.5%">
+                        <!--Textboxes will be added here -->
+                    </div>
+                </div>
+                <div class="popupfoot">
+                    <div class="float-right">
+                        <a href="javascript:void(0);" id="btnMCts" class="btn btn-themed">Select</a>
+                        <a href="javascript:void(0);" id="btnMCtsCncl" class="btn btn-default cancel">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ColorModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">Select Color</div>
+            <div class="popupcenter">
+                <div class="modal-body">
+                    @Html.CheckBoxList("MColor", ViewData["MColor"] as IEnumerable<MultiListInfo>, new { @class = "modalblockCol list-unstyled" }, true)
+                </div>
+            </div>
+            <div class="popupfoot">
+                <div class="float-right">
+                    <a href="javascript:void(0);" id="btnMCol" class="btn btn-themed">Select</a>
+                    <a href="javascript:void(0);" id="btnMColCncl" class="btn btn-default cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ClarityModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">Select Clarity</div>
+            <div class="popupcenter">
+                <div class="modal-body">
+                    @Html.CheckBoxList("MClarity", ViewData["MClarity"] as IEnumerable<MultiListInfo>, new { @class = "modalblockClr list-unstyled" }, true)
+                </div>
+            </div>
+            <div class="popupfoot">
+                <div class="float-right">
+                    <a href="javascript:void(0);" id="btnMClr" class="btn btn-themed">Select</a>
+                    <a href="javascript:void(0);" id="btnMClrCncl" class="btn btn-default cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="CutModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">Select Cut</div>
+            <div class="popupcenter">
+                <div class="modal-body">
+                    @Html.CheckBoxList("MCut", ViewData["MCut"] as IEnumerable<MultiListInfo>, new { @class = "modalblock list-unstyled" }, true)
+                </div>
+            </div>
+            <div class="popupfoot">
+                <div class="float-right">
+                    <a href="javascript:void(0);" id="btnMCut" class="btn btn-themed">Select</a>
+                    <a href="javascript:void(0);" id="btnMCutCncl" class="btn btn-default cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="PolishModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">Select Polish</div>
+            <div class="popupcenter">
+                <div class="modal-body">
+                    @Html.CheckBoxList("MPolish", ViewData["MPolish"] as IEnumerable<MultiListInfo>, new { @class = "modalblock list-unstyled" }, true)
+                </div>
+            </div>
+            <div class="popupfoot">
+                <div class="float-right">
+                    <a href="javascript:void(0);" id="btnMPol" class="btn btn-themed">Select</a>
+                    <a href="javascript:void(0);" id="btnMPolCncl" class="btn btn-default cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="SymModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">Select Sym</div>
+            <div class="popupcenter">
+                <div class="modal-body">
+                    @Html.CheckBoxList("MSym", ViewData["MSym"] as IEnumerable<MultiListInfo>, new { @class = "modalblock list-unstyled" }, true)
+                </div>
+            </div>
+            <div class="popupfoot">
+                <div class="float-right">
+                    <a href="javascript:void(0);" id="btnMSym" class="btn btn-themed">Select</a>
+                    <a href="javascript:void(0);" id="btnMSymCncl" class="btn btn-default cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="FlModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">Select Flourence</div>
+            <div class="popupcenter">
+                <div class="modal-body">
+                    @Html.CheckBoxList("MFl", ViewData["MFl"] as IEnumerable<MultiListInfo>, new { @class = "modalblock list-unstyled" }, true)
+                </div>
+            </div>
+            <div class="popupfoot">
+                <div class="float-right">
+                    <a href="javascript:void(0);" id="btnMFl" class="btn btn-themed">Select</a>
+                    <a href="javascript:void(0);" id="btnMFlCncl" class="btn btn-default cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="SaveSrcModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">My Favourites</div>
+            <div class="popupcenter">
+                <div class="modal-body">
+                    <div class="col-md-12" style="padding-bottom: 4px;">@Html.CheckBox("isWatchList", false) Save as WatchList ?</div>
+                    @*<div class="col-md-12">@Html.Label("Search Name", new { @class = "control-label" })</div>*@
+                    <div class="col-md-12">@Html.TextBox("SearchName", null, new { @class = "form-control", @onkeyup = "return validSrcName();", @onblur = "return validSrcName();", @ondrop = "return false;", @onpaste = "return false;", placeholder = "Please enter search name.." })</div>
+                    <div class="col-md-12 msg"></div>
+                </div>
+            </div>
+            <div class="popupfoot">
+                <div class="float-right">
+                    <a href="javascript:void(0);" id="btnSaveSrc" class="btn btn-themed">Save</a>
+                    <a href="javascript:void(0);" id="btnSaveSrcCncl" class="btn btn-default cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link href="~/Content/Custom/invsearch.css" rel="stylesheet" />
+    <script src="~/Scripts/Custom/jscommon.js"></script>
+    <script src="~/Scripts/Custom.js"></script>
+    <script>
+        $(function () { /*SetLoadingProc(); */ var retstr = []; ret = "@TempData["callbackSearchParams"]"; callback(ret); }); window.onload = function () { /*RemoveLoadingProc();*/ };
+    </script>

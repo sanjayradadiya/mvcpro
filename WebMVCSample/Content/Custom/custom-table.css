@@ -1,0 +1,9 @@
+﻿@import url('../../Content/Custom/CustomDataTable.css');
+
+table.dataTable thead th {
+    white-space:nowrap;
+}
+
+table.dataTable tbody td {
+    white-space:nowrap;
+}

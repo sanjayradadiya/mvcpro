@@ -1,0 +1,292 @@
+﻿@*<script src="~/Scripts/JDatatables11012/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/JDatatables11012/js/dataTables.jqueryui.min.js"></script>*@
+
+@*<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<link rel="shortcut icon" type="image/png" href="~/Content/Images/favicon.ico" />
+<link type="text/css" href="~/Content/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/dataTables.jqueryui.min.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/select.jqueryui.min.css" rel="stylesheet" />*@
+
+@Styles.Render("~/Content/datatable_css")
+@Scripts.Render("~/bundles/datatable")
+
+<div class="titlesbar">
+    <div class="col-md-4 col-sm-12 col-xs-12 caption">
+        <i class="fa fa-diamond font-yellow-crusta" aria-hidden="true"></i>
+        <span class="text-uppercase">@ViewBag.Title</span>
+        <span id="lblFoundedStock" class="subcaption"></span>
+    </div>
+    <div class="col-md-8 col-sm-12 col-xs-12">
+        <div class="clearfix"></div>
+        <nav class="navbar acti navabar pull-right">
+            <div class="navbar-header action689 ">
+                <button type="button" class="navbar-toggle btn-sm" data-toggle="collapse" data-target="#myNavbar">
+                    <a class="navbar-brand bttn680" href="javascript:void(0);"><i class="fa fa-server"></i>Action</a>
+                </button>
+
+            </div>
+            <div class="collapse navbar-collapse action123 " id="myNavbar" style="">
+                <ul class="nav navbar-nav navbar-left act" style="float: right;">
+                    @if (ViewBag.PageName == "INVRESULTS")
+                    {
+                        <li class="msearch"><a class="btn btn-themed" id="ModifySearch" data-request-url="@Url.Action("ModifySearch", "InventoryResults")" data-response-url="@Url.Action("Index", "InventorySearch")" >Modify Search</a></li>
+                    }
+                    <li><a class="btn btn-themed" id="NewSearch" data-request-url="@Url.Action("NewSearch", "InventoryResults")" data-response-url="@Url.Action("Index", "InventorySearch")" >New Search</a></li>
+                    @if (ViewBag.PageName != "INVRESULTS")
+                    {
+                        <li class="msearch"><a class="btn btn-themed" id="DelStock" data-pagetype="@ViewBag.PageName" data-request-url="@Url.Action("DelSelecteds", "InventoryCart")" >Delete Selected</a></li>
+                    }
+                    <li><a class="btn btn-themed" id="ExportToExcel" data-request-url="@Url.Action("ExportExcel", "InventoryResults")" >Excel</a></li>
+                    <li><a class="btn btn-themed popupinvclk" id="Email" show-popup="#EmailModal">Email</a></li>
+                    @if (ViewBag.PageName != "CART")
+                    {
+                        <li><a class="btn btn-themed" id="AddtoCart" data-request-url="@Url.Action("AddCart", "InventoryResults")" >Add To Cart</a></li>
+                    }
+                    @if (ViewBag.PageName != "BUYREQUEST")
+                    {
+                        <li><a class="btn btn-themed btn-success glowbutton" id="AddtoBuyReq" data-request-url="@Url.Action("AddBuyRequest", "InventoryResults")" >Buy Now</a></li>
+                    }
+                    <li><a class="btn btn-themed" id="OpenCloseDets" data-srctable="#grview">Hide/Show Details</a></li>
+                    <li><a class="btn btn-themed" id="CompareStone" data-request-url="@Url.Action("CompareStones", "InventoryResults")" >Compare Stone</a></li>
+                    @*<li><a class="btn btn-themed" id="ShowSelecteds" data-request-url="@Url.Action("SelectedStock", "InventoryResults")" >Show Selected</a></li>*@
+                    @*<li>
+                <div class="btn-group dropdown">
+                    <button type="button" class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown">Utility<span class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                    </ul>                    
+                </div>
+            </li>*@
+                    <li></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+<div id="invcustoms" class="row-fluid">
+    <div id="divSummary" class="col-md-12">
+        @*<table class="sumTab table-responsive table-bordered">
+            <tr class="summarytab">
+                <td class="h"><span>Stones </span><span id="spStones">0</span> </td>
+                <td class="h"><span>Cts </span><span id="spCts"></span></td>
+                <td class="h"><span>$/Cts </span><span id="spRate"></span></td>
+                <td class="h"><span>Discount </span><span id="spDisc"></span></td>
+                <td class="h"><span>Amount </span><span id="spAmt"></span></td>
+            </tr>
+        </table>*@
+        <div class="col-md-2 col-xs-6"><span>Stones    :  </span><span id="spStones">0</span></div>
+        <div class="col-md-2 col-xs-6"><span>Cts       :  </span><span id="spCts">0.00</span></div>
+        <div class="col-md-2 col-xs-6"><span>$/Cts     :  </span><span id="spRate">0.00</span></div>
+        <div class="col-md-2 col-xs-6"><span>Discount  :  </span><span id="spDisc">0.00</span></div>
+        <div class="col-md-2 col-xs-6" style="border: none !important"><span>Amount    :  </span><span id="spAmt">0.00</span></div>
+        <div class="col-md-2 col-xs-6" style="border: none !important">&nbsp;</div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
+<div id="SearchResults">
+    <div class="row-fluid col-md-12">
+        <table id="grview" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>
+                        <div class="checkall">
+                            <input type="checkbox" name="selectAll" id="chkAll">
+                        </div>
+                    </th>
+                    <th>Status</th>
+                    <th>Lab</th>
+                    <th>CertNo.</th>
+                    <th></th>
+                    <th>StoneId</th>
+                    <th>Shape</th>
+                    <th>Weight</th>
+                    <th>Color</th>
+                    <th>Clarity</th>
+                    <th>Cut</th>
+                    <th>Polish</th>
+                    <th>Sym</th>
+                    <th>Flour.</th>
+                    <th>Raparate</th>
+                    <th>$/Cts.</th>
+                    <th>Disc%</th>
+                    <th>Total$</th>
+                    <th>Depth%</th>
+                    <th>Table%</th>
+                    <th>Measurement</th>
+                    <th style="padding: 0px 16px;">Girdle</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th colspan="2" style="text-align: right">Total:</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Weight</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>Raparate</th>
+                    <th>$/Cts.</th>
+                    <th>Disc%</th>
+                    <th>Total$</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </tfoot>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-12 col-sum-legends" style="background-color: #f1f3ff">
+        <div id="sd" class="container"></div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 legends stateLegends">
+            <div class="col-sm-1 col-xs-12">COLOR LEGENDS</div>
+            <div class="col-sm-1 col-xs-6"><span class="N">N</span>&nbsp;New Arrival</div>
+            <div class="col-sm-1 col-xs-6"><span class="H">H</span>&nbsp;Stone On Hold</div>
+            <div class="col-sm-1 col-xs-6"><span class="A">A</span>&nbsp;Available</div>
+            <div class="col-sm-1 col-xs-6"><span class="M">M</span>&nbsp;Memo</div>
+            <div class="col-sm-1 col-xs-6"><span class="U">U</span>&nbsp;Unavailable</div>
+            <div class="col-sm-2 col-xs-12"><span class="B">B</span>&nbsp;Stone Is On Your Orders</div>
+            <div class="col-sm-4"></div>
+        </div>
+        @Html.Hidden("ActMethod", (string)ViewBag.ActionMethod)
+    </div>
+</div>
+
+<div id="EmailModal" class="popup" style="display: none;">
+    <div class="popupcon popupmodal">
+        <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+        <div class="popuphead">Email Details</div>
+        <div class="popupcenter">
+            <div class="row-fluid">
+                @*<div class="col-md-12 alert-msg">
+                    <div class="alert alert-success" id="respAlert"></div>
+                </div>*@
+                <div class="col-md-12">
+                    @Html.Label("Email Id", new { @class = "control-label" })
+                    <span style="color: #ff7c7c; font-size: 9px;">(send multi emails by separating with ',')</span>
+                </div>
+                <div class="col-md-12 spacer10">
+                    @Html.TextBox("EmailId", Convert.ToString(@Session["Emailid"]), new { @class = "form-control", placeholder = "*Comma',' separated list to send multiple Mails" })
+                </div>
+                <div class="col-md-12">
+                    @Html.Label("Subject", new { @class = "control-label" })
+                </div>
+                <div class="col-md-12 spacer10">
+                    @Html.TextBox("Subject", "Selected Stock Dettails @ " + Convert.ToString(@Session["global-website"]), new { @class = "form-control", placeholder = "Subject.." })
+                </div>
+                <div class="col-md-12">
+                    @Html.Label("Message", new { @class = "control-label" })
+                </div>
+                <div class="col-md-12">
+                    @Html.TextArea("Message", "", new { @class = "form-control", rows = 5 })
+                </div>
+            </div>
+        </div>
+        <div class="popupfoot">
+            <div class="float-right">
+                <a href="javascript:void(0);" id="btnSend" data-response-val="#respAlert" data-request-url="@Url.Action("InvMail", "InventoryResults")" class="btn btn-themed">Send</a>
+                <a href="javascript:void(0);" id="btnCancel" class="btn btn-default cancel">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+    var curgrid = '#grview';
+    $(document).ready(function () {
+        /*SetLoadingProc(); */setCookie("CK_SELECTEDS", " ", -1);
+        fRapTotal = 0; var sMethod = $("#ActMethod").val(); urlReq = '@Url.Action("serverMethod")';
+        //var ph = $(window).innerHeight;
+        var oTable = $(curgrid).DataTable({
+            oLanguage: { sProcessing: "<img src='../Content/images/loader.gif'>" },
+            bProcessing: true, serverSide: true, bSort: false, sAjaxSource: urlReq.replace("serverMethod", sMethod),
+            aLengthMenu: [25, 50, 100], iDisplayLength: 25, bLengthChange: true, bDestroy: true, sEmptyTable: "Loading data from server",
+            searching: false, bAutoWidth: false, paging: true, scrollX: true, /*scrollY: "355px",scrollY: $(window).height() - 315,*/  stateSave: false,
+            fnServerData: function (sSource, aaData, fnCallback) { $.ajax({ "dataType": 'json', "type": "POST", "url": sSource, "data": aaData, "success": fnCallback }).complete(function () { /*RemoveLoadingProc();*/ }); },
+            fnCreatedRow: function (nRow, aData, iDataIndex) {
+                $(nRow).attr('id', aData[6]); $('td', nRow).addClass("Expand"); $('td:eq(0)', nRow).addClass("Expand details-control");
+                $('td:eq(1)', nRow).html('<input type="checkbox" name="checkinv" id="checkinv" data-framt="' + aData[57] + '" class="checkbox" value="' + aData[6] + '">');
+                $('td:eq(2)', nRow).html(formatLegends($('td:eq(2)', nRow).html()));
+                $('td:eq(5)', nRow).html('<a href="javascript:void(0);" name="refdets" class="refdets" data-rowid="' + aData[6] + '"><i class="fa fa-camera fa-lg" aria-hidden="true"></i></a>');
+            },            rowCallback: function (row, data, dataIndex) { /* Get row ID*/ var rowId = data[6]; /* If row ID is in the list of selected row IDs*/ if ($.inArray(rowId, rows_selected) !== -1) { $(row).find('input[type="checkbox"]').prop('checked', true); $(row).addClass('selected'); } },            fnInitComplete: function (oSettings, json) { $('#sd').html(formattotals(json.igTotals, json.iTotalRecords)); $('#lblFoundedStock').html('[ ' + json.iTotalRecords + ' ] Stones Found'); jQuery('.dataTables_scrollHead').css('width', '98%'); },
+            fnFooterCallback: function (nFoot, aData, iStart, iEnd, aiDisplay) {
+                var api = this.api(); nFoot.getElementsByTagName('th')[0].innerHTML = "Total :"; setCalc(api, 8); setCalc(api, 15); setCalc(api, 16); setCalc(api, 17); setCalc(api, 18);
+                totCts = isNum(nFoot.getElementsByTagName('th')[7].innerHTML)
+                setCalcAvg(api, 16, 18, totCts); setCalcDisc(api, 17, 18, aData); setCalcAvg2(api, 15, fRapTotal, totCts);
+            },
+            fnDrawCallback: function () { jQuery('.dataTables_scrollHead').css('width', '98%'); }
+        });
+
+        /*Handle selection by table cell checkBox click */
+        $(curgrid + ' tbody').on('click', 'input[type="checkbox"]', function (e) {
+            var row = $(this).closest('tr');
+            /*current row calculation */ curCalc(this, row);
+            /*row selected style */ this.checked ? row.addClass('selected') : row.removeClass('selected');
+            /*Update state of "Select all" control */ updateDataTableSelectAllCtrl(oTable);
+            /*Prevent click event from propagating to parent */ e.stopPropagation();
+        });
+
+        /*Handle selection by table cell checkBox click */
+        $(curgrid + ' tbody').on('click', '.refdets', function (e) { var row = $(this).closest('tr'); rowid = $(row).attr('id'); window.open("@Url.Action("StoneDetail", "InventoryResults", new { id = "rowid" })".replace("rowid", rowid), "_blank"); });
+
+        /*Handle click on table cells with checkboxes*/
+        $(curgrid).on('click', 'tbody td', function (event) {
+            if ($(this).hasClass('Expand')) {
+                if ($(event.target).find('input[type=checkbox],a').length > 0 | $(event.target).hasClass('details-control') | $(event.target).is('a') | $(event.target).is('i')) { return; }
+                var expander = $(this).closest('tr').find('td.details-control'); activateChild(expander);
+            }
+        });
+
+        /* Handle click on "Select all" control*/
+        $('thead input[name="selectAll"]').on('change', function (e) {
+            if (rows_selected == null) rows_selected = []; var rows = $(curgrid).dataTable().fnGetNodes();
+            if (this.checked) { for (var i = 0; i < rows.length; i++) { var chk = $(rows[i]).find('input[name=checkinv]'); if (!$(chk).prop('checked')) $(chk).click(); } }
+            else { for (var i = 0; i < rows.length; i++) { var chk = $(rows[i]).find('input[name=checkinv]'); if ($(chk).prop('checked')) $(chk).click(); } }
+            /* Prevent click event from propagating to parent */ e.stopPropagation();
+        });
+
+        /* Handle table draw event */
+        oTable.on('draw', function () { /* Update state of "Select all" control */ updateDataTableSelectAllCtrl(oTable); });
+
+        /* Add event listener for opening and closing details */
+        $(curgrid + ' tbody').on('click', 'td.details-control', function () { activateChild(this); });
+
+        function activateChild(obj) {
+            var tr = $(obj).closest('tr'); var row = oTable.row(tr);
+            if (row.child.isShown()) { /* This row is already open - close it */ $('div.slider', row.child()).slideUp(function () { row.child.hide(); tr.removeClass('shown'); }); }
+            else { /* Open this row */ row.child(format(row.data()), 'no-padding').show(); tr.addClass('shown'); $('div.slider', row.child()).slideDown(); }
+        }
+    });
+    $(window).on("load", function () {
+        function resizetable() {
+            var wh = $(window).height(); var toph = $(".topheader").height(); var headh = $(".titlesbar").height();
+            sumh = $('#invcustoms').height(); footerh = $('.footer').height(); legh = $('.col-sum-legends').height();
+            var actheight = wh - toph - headh - sumh - legh - 200;
+            if (actheight < 20) { $(".dataTables_scrollBody").height(350); } else { $(".dataTables_scrollBody").height(actheight); }
+            //$(".dataTables_scrollBody").height(850);
+        }
+        resizetable();
+        $(window).resize(resizetable);
+    });
+</script>
+@*<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">*@
+<link href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/Custom/invresults.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/Custom/invresults.js"></script>

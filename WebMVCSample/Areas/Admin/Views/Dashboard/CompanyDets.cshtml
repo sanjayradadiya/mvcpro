@@ -1,0 +1,167 @@
+﻿@model WebInventory.Areas.Admin.ViewModels.CompanyDetVM
+
+@{
+    ViewBag.Title = "CompanyDets";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+<link href="~/Content/Custom/compndets.css" rel="stylesheet" />
+<div class="container">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="container-fluid shadow">
+            <form id="frmCompany">
+                <div class="col-md-12 titlesbar">
+                    <div class="col-md-6">
+                        <div class="caption"><i class="fa fa-bank"></i><span style="padding-right: 6px;"></span>Company Details</div>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label for="companyLocation">Location</label>
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.cType, new SelectList(WebInventory.Areas.Admin.Models.CompanyProfile.GetLocations(), "Value", "Text"), new { @class = "invselector", Placeholder = "Location" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fulid">
+
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="col-md-3 -spacer5">
+                                    @Html.LabelFor(model => model.cAddress, new { @class = "control-label" })
+                                </div>
+                                <div class="col-md-9 col-xs-9 spacer10">
+                                    @Html.TextAreaFor(model => model.cAddress, new { @class = "form-control", rows = "15" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="col-md-3 -spacer5">
+                                    @Html.LabelFor(model => model.cPhoneDetails, new { @class = "control-label" })
+                                </div>
+                                <div class="col-md-9 col-xs-9 spacer10">
+                                    @Html.TextAreaFor(model => model.cPhoneDetails, new { @class = "invselector" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="col-md-3 -spacer5">
+                                    @Html.LabelFor(model => model.cBankDetails, new { @class = "control-label" })
+                                </div>
+                                <div class="col-md-9 col-xs-9 spacer10">
+                                    @Html.TextAreaFor(model => model.cBankDetails, new { @class = "invselector" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="col-md-3 -spacer5">
+                                    @Html.LabelFor(model => model.cRoutingDetails, new { @class = "control-label" })
+                                </div>
+                                <div class="col-md-9 col-xs-9 spacer10">
+                                    @Html.TextAreaFor(model => model.cRoutingDetails, new { @class = "invselector" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row-fluid text-right">
+                            <div class="col-md-12 statusbar">
+                                <input id="btnChangeCdet" data-req-url="@Url.Action("PostCompanyDets", "Dashboard")" type="submit" value="Change" class="btn btn-themed" />
+                                @Html.ActionLink("Cancel", "EditClient", "Account", new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-1"></div>
+</div>
+
+<script src="~/Scripts/tinymce/tinymce.min.js"></script>
+
+<script type="text/javascript">
+    //tinyMCE.init({
+    //tinymce.init({
+    //    plugins: "textcolor",
+    //    toolbar: "forecolor backcolor",
+    //    selector: "textarea[name='cAddress']",
+    //    height: 100,
+    //    menubar: false,
+    //    statusbar: false,
+    //});
+
+    tinymce.init({
+        selector: "textarea[name='cAddress']", theme: "modern", rows: 10,
+        plugins: [
+			"advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",
+			"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+			"save table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker codesample"
+        ],
+        /*content_css: "../css/development.css",*/ add_unload_trigger: false, autosave_ask_before_unload: false,
+
+        //toolbar1: "save newdocument fullpage | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect",
+        toolbar1: "bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect",
+        toolbar2: "cut copy paste pastetext | searchreplace | bullist numlist | outdent indent blockquote | undo redo | insertdatetime preview | forecolor backcolor",
+        toolbar3: "hr removeformat | subscript superscript | charmap emoticons | spellchecker",
+        menubar: false, statusbar: false, toolbar_items_size: 'small',
+
+        style_formats: [
+			{ title: 'Bold text', inline: 'b' }, { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+			{ title: 'Red header', block: 'h1', styles: { color: '#ff0000' } }, { title: 'Example 1', inline: 'span', classes: 'example1' },
+			{ title: 'Example 2', inline: 'span', classes: 'example2' }, { title: 'Table styles' }, { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+        ],
+
+        templates: [
+			{ title: 'My template 1', description: 'Some fancy template 1', content: 'My html' },
+			{ title: 'My template 2', description: 'Some fancy template 2', url: 'development.html' }
+        ],
+
+        spellchecker_callback: function (method, data, success) {
+            if (method == "spellcheck") {
+                var words = data.match(this.getWordCharPattern()); var suggestions = {};
+
+                for (var i = 0; i < words.length; i++) { suggestions[words[i]] = ["First", "second"]; }
+
+                success({ words: suggestions, dictionary: true });
+            }
+
+            if (method == "addToDictionary") { success(); }
+        }
+    });
+
+    $(function () {
+        /*SetLoadingProc();*/
+        $('#cType').change(function () {
+            SetLoadingProc();
+            $.ajax({
+                url: '@Url.Action("CompanyDets", "Dashboard")', type: 'POST', datatype: 'json', data: { "ptype": $(this).val() },
+                success: function (resp) {
+                    if (resp.isError) { alert(resp.msg); return false; } else { var d = resp.data; tinymce.get('cAddress').setContent(d.cAddress); $('#cPhoneDetails').val(d.cBankDetails); $('#cBankDetails').val(d.cPhoneDetails); $('#cRoutingDetails').val(d.cRoutingDetails); }
+                }, error: function () { alert('Something went wrong, Please try again'); }
+            }).complete(function () { RemoveLoadingProc(); });
+        });
+
+        $('#btnChangeCdet').on('click', function () {
+            SetLoadingProc(); var row = { "cType": $('#cType').val(), "cAddress": tinymce.get('cAddress').getContent(), "cPhoneDetails": $('#cPhoneDetails').val(), "cBankDetails": $('#cBankDetails').val(), "cRoutingDetails": $('#cRoutingDetails').val() }
+            $.ajax({
+                url: '@Url.Action("PostCompanyDets", "Dashboard")', type: 'POST', datatype: 'json', data: row,
+                success: function (resp) { if (resp.isError) { alert(resp.msg); return false; } else { var d = resp.data; tinymce.get('cAddress').setContent(d.cAddress); $('#cPhoneDetails').val(d.cBankDetails); $('#cBankDetails').val(d.cPhoneDetails); $('#cRoutingDetails').val(d.cRoutingDetails); } },
+                error: function () { alert('Something went wrong, Please try again'); }
+            }).complete(function () { RemoveLoadingProc(); });
+        });
+
+        RemoveLoadingProc();
+    });
+</script>

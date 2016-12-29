@@ -1,0 +1,131 @@
+﻿@using WebInventory.Common;
+<link href="~/Content/Custom/compndets.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <div class="col-md-3 col-xs-12">
+        <div class="col-md-12 titlesbar">
+            <div class="caption"><i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;Excel file Validator </div>
+        </div>
+        <div class="col-md-12" style="margin-top: 2%;">
+            <ul class="nav nav-pills">
+                <li>
+                    <div class="form-group">
+                        <button id="atuoLists" class="btn btn-themed" value="AtuoFill"><i class="fa fa-magic" aria-hidden="true"></i>&nbsp;Auto Fill</button>
+                    </div>
+                </li>
+                <li>
+                    <div class="form-group">
+                        <button id="clearLists" class="btn btn-themed" value="ClearAll"><i class="fa fa-paint-brush" aria-hidden="true"></i>&nbsp;Clear All</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-9 col-xs-12" style="margin: 1% 0% 0%;">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-md-12 col-xs-12 coltitle">
+                    <div class="col-md-6 col-xs-6">Column Identifier</div>
+                    <div class="col-md-6 col-xs-6">Excel Column</div>
+                </div>
+                <div class="col-md-12 col-xs-12 mappers">
+
+                    @if (ViewBag.ExcelColumns != null)
+                    {
+                        List<SelectListItem> excelCols = ViewBag.ExcelColumns;
+                        string[] excelColArry = excelCols.ToArray().Select(i => i.Text).ToArray();
+                        int indx = 0;
+                        foreach (ExcelFormatter dr in ViewBag.ExcelColumnMapper)
+                        {
+                            string classtype = dr.IsRequired == true ? "invselector required" : "invselector";
+                        <div class="col-md-6 col-xs-6">
+                            @Html.Label("Col_Label_" + indx.ToString(), dr.ShowColumnName, new { @class = classtype, data_reqCol = dr.ColumnName })
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            @Html.DropDownList("Col_Controller_" + indx.ToString(), new SelectList(excelCols, "Value", "Text",
+                                                Array.IndexOf(excelColArry, dr.MatchCols.Intersect(excelColArry).FirstOrDefault()) != -1 ?
+                                                dr.MatchCols.Intersect(excelColArry).FirstOrDefault() : null
+                                        ), "", new { @class = classtype })
+                        </div>
+                                
+                            indx++;
+                                    
+                        <div class="clearfix"></div>
+                        }
+                    }
+
+                </div>
+                <div class="col-md-12">
+                    <div class="pull-right">
+                        <ul class="nav nav-pills">
+                            <li>
+                                <button id="btnVerify" class="btn btn-themed" value="AtuoFill"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;Sync to Website</button>
+                            </li>
+                            @*<li>
+                                <button id="btnCancel" class="btn btn-themed" data-requrl="@Url.Action("UploadStock","Dashboard")" value="ClearAll"><i class="fa  fa-times" aria-hidden="true"></i>&nbsp;Cancel Operation</button>
+                            </li>*@
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Hidden("hdnPrimary")
+</div>
+
+<div class="col-md-2"></div>
+<script type="text/javascript">
+    $(function () {
+        function resizeWin() {
+            var winh = $(window).innerHeight(); var navh = $('.navbar').height(); var tith = $('.titlesbar').height();
+            minhght = winh - navh - tith - 154; $('.mappers').height(minhght);
+        } resizeWin(); $(window).resize(resizeWin);
+        var sel = '';
+        $("select").each(function () { sel += this.id + '@@' + this.value + ',' });
+        if (sel != '') { $('#hdnPrimary').val(sel); }
+        $('#clearLists').on('click', function () { var res = $("select").each(function () { this.selectedIndex = 0; $(this).removeClass('errSelector'); }); return false; });
+        $('#atuoLists').on('click', function () {
+            var selectors = $('#hdnPrimary').val().split(','); $("select").each(function () { $(this).removeClass('errSelector'); });
+            $.each(selectors, function (index, item) { if (item != '') { var collection = item.split('@@'); $('#' + collection[0]).val(collection[1]); } });
+            return false;
+        });
+        $('#btnVerify').on('click', function () {
+            if ($(".errSelector").length > 0) { SetNotify("error", "Some of fields required mapping"); return false; }
+            mapCols = new Array(); mappedBlnks = new Array(); validateSelectd();
+            $("select").map(function () { var retvl = $(this).val(); mapCols.push(retvl); if (retvl == '') { mappedBlnks.push(retvl) } });
+            if (mapCols.length == mappedBlnks.length) { SetNotify('error', 'Please check no. of mapped Columns not be blank'); return false; }
+            $.ajax({
+                url: '@Url.Action("ValidateFile")',
+                data: JSON.stringify({ 'mappedCols': mapCols }),
+                datatype: 'json',
+                type: 'POST', async: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (resp) {
+                    var $active = $('.wizard .nav-tabs li.active');
+                    $active.next().removeClass('disabled');
+                    nextTab($active);
+                    $(".tabFinal").load('@Url.Action("ViewErrorLogs")').fadeIn('slow').fadeIn(5000);
+                },
+                error: function (resp) { console.log('something went wrong'); }
+            });
+            return false;
+        });
+
+        $("select").change(function () {
+            var isvalid = $(this).hasClass('required');
+            if (isvalid == true && $(this).val() == '') { if ($(this).hasClass('errSelector') != true) { $(this).addClass('errSelector'); } else { $(this).removeClass('errSelector'); } }
+            else { $(this).removeClass('errSelector'); }
+        });
+
+        function validateSelectd() {
+            $('select').each(function (indx, val) {
+                var isvalid = $(val).hasClass('required');
+                if (isvalid == true && $(val).val() == '') { if ($(val).hasClass('errSelector') != true) { $(val).addClass('errSelector'); } else { $(val).removeClass('errSelector'); } }
+                else { $(val).removeClass('errSelector'); }
+            })
+        }
+
+        $(".prev-step").click(function (e) { var $active = $('.wizard .nav-tabs li.active'); prevTab($active); });
+    });
+</script>

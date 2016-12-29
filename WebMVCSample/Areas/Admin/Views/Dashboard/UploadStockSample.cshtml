@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "UploadStock";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+
+@Styles.Render("~/Content/fileInputBundle");
+
+<script src="~/Scripts/fileUploader/fileinput.js"></script>
+
+<div class="container">
+    <div class="col-md-12">
+        <div class="row shadow maindiv">
+            <div class="container-fluid">
+
+                <div class="col-md-4 col-sm-12">
+                    <div class="col-md-12 titlesbar">
+                        <div class="caption"><i class="fa fa-cloud-upload"></i><span style="padding-right: 6px;"></span>Website Excel Data Importer</div>
+                    </div>
+                    <div class="col-md-12" style="color: #aaa;">
+                        <span style="font: bold 11px verdana;">Instructions</span>
+                        <ul>
+                            <li>You can access it by simply drag and drop</li>
+                            <li>(Or) You can simply browse the file which you want to upload</li>
+                            <li>Accepts Only Excel files with extension .xlsx</li>
+                            <li>Data will be retained for Next new upload.</li>
+                            <li>Previous data will not be hold by website.</li>
+                            <li>Previous data can not be recovered</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-8 col-sm-12">
+                    <div class="col-md-12 bhoechie-tab-container">
+                        @*<div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active text-left">
+                            <h4 class="fa fa-file-excel-o"></h4>
+                            <span class="disptitles">Excel (.xlsx)</span>
+                        </a>
+                    </div>
+                </div>*@
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bhoechie-tab panel-uploads">
+                            <!-- File section -->
+                            <div class="bhoechie-tab-content active">
+                                <form enctype="multipart/form-data">
+                                    <label>Excel Stock File Uploader</label>
+                                    <input id="file-excel" name="file-excel[]" type="file" multiple>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#file-excel').fileinput({
+            language: 'fr', type: 'POST',
+            uploadUrl: '@Url.Action("UploadStock", "Dashboard")',
+            allowedFileExtensions: ['xlsx'],
+            maxFileCount: 1, uploadAsync: true,
+            msgSizeTooLarge: "File {name} ({size} KB) exceeds maximum upload size of {maxSize} KB. Please Try again",
+            msgFilesTooMany: "Number of Files selected for upload ({n}) exceeds maximum allowed limit of {m}",
+            msgInvalidFileType: 'Invalid type for file "{name}". Only {types} files are supported.',
+            msgInvalidFileExtension: 'Invalid extension for file {name}. Only "{extensions} files are supported.',
+        });
+
+        $('#file-excel').on('fileuploaded', function (event, data, previewId, index) {
+            response = data.response;
+            window.location = response.respUrl;
+        });
+    </script>
+    <script src="~/Scripts/Custom/CustomfileInput.js"></script>
+</div>

@@ -1,0 +1,43 @@
+﻿.titlesbar {
+    padding: .6% 0% !important;
+    border-bottom: 3px double #6668c0;
+    margin-bottom: .6%;
+}
+
+.statusbar {
+    padding: .8% 0% !important;
+    border-top: 3px double #6668c0;
+    margin-bottom: .8%;
+    background-color:#f0f0ff;
+}
+
+.caption {
+    font-size: 25px;
+}
+
+.shadow {
+    box-shadow: 0 5px 15px rgb(191, 193, 255);
+    margin: auto;
+}
+
+.panel-body {
+    background-color: #f7f7ff;
+}
+
+.invselector {
+    margin-bottom: 5%;
+    box-shadow: 0 3px 0 rgba(100,99,177,.43),0 -1px rgba(100,99,177,.26) inset;
+    background: #fbfbfb;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #dcdceb;
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    color: #808080;
+    height: 28px;
+}
+
+    .invselector input {
+        cursor: auto !important;
+    }

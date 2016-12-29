@@ -1,0 +1,197 @@
+﻿@model WebInventory.ViewModels.BookAppointmentVM
+
+@{
+    ViewBag.Title = "BookAppointment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*@using (Html.BeginForm("BookAppointment", "Account", FormMethod.Post, new { id = "form" }))
+{
+    @Html.AntiForgeryToken()
+    *@
+<style>
+    .titlesbar {
+        padding: 1.8% 0% 0.8%;
+        border-bottom: 3px double #d4d4ff;
+        margin-bottom: 1.5%;
+    }
+
+    body {
+        background: url(../content/Images/pattern.png) 0 bottom repeat !important;
+    }
+    .bookAppt {
+        background: #fff;
+    }
+    .arrow-left {
+        float: left; display: inline-block; padding-right: 1.2%; font-size:20px; color: #6668c0;
+    }
+</style>
+
+<div class="container">
+    <div class="col-md-12 bookAppt">
+        <div class="titlesbar">
+            <a href="@Url.Content("/InventorySearch")"><span class="arrow-left" style=""><i class="fa fa-arrow-left" aria-hidden="true"></i></span></a>
+            <span class="caption">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                <span class="text-uppercase">Appointment</span>
+            </span>
+        </div>
+        <form id="BookAppointment">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="col-md-4">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.emailid, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.TextBoxFor(model => model.emailid, new { @class = "form-control validate[required,custom[email]]", autocomplete = "off", placeholder = "Enter Your Emaild*", data_errormessage = "Enter Valid EmailId" })
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.CompanyName, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.TextBoxFor(model => model.CompanyName, new { @class = "form-control validate[required]", autocomplete = "off", placeholder = "Enter Company Name*", data_errormessage = "Enter Your Company Name" })
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.contact1, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.TextBoxFor(model => model.contact1, new { @class = "form-control validate[required,custom[integer]]", autocomplete = "off", placeholder = "Enter Contact Number*", data_errormessage = "Enter Contact No", onkeypress = "DecValid(event,this,12)", onkeyup = "DecValid(event,this,12)", onpaste = "return false;", ondrop = "return false;" })
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.contact2, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.TextBoxFor(model => model.contact2, new { @class = "form-control validate[required,custom[integer]]", autocomplete = "off", placeholder = "Enter Office Number", onkeypress = "DecValid(event,this,12)", onkeyup = "DecValid(event,this,12)", onpaste = "return false;", ondrop = "return false;", data_errormessage = "Enter Office Contact No" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.Location, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.DropDownListFor(model => model.Location, new SelectList(Model.ListAppoinmentAt, "Value", "Text"), "Select Appointment Location", new { @class = "form-control validate[required]", placeholder = "Enter Apponintment Location*", data_errormessage = "Select Valid Appointment Location" })
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.appdate, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.TextBoxFor(model => model.appdate, "{0:dd/MM/yyyy}", new { @class = "form-control validate[required,funcCall[DateFormat[]] date", data_errormessage = "Select Appointment Date" })
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.Label("Appoinment Time", new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(model => model.ftime, new { @class = "form-control validate[required] clockpicker", placeholder = "Enter From Time*" })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(model => model.ttime, new { @class = "form-control validate[required] clockpicker", placeholder = "Enter To Time*" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.PersonName, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.TextBoxFor(model => model.PersonName, new { @class = "form-control  validate[required]", autocomplete = "off", placeholder = "Contact Person Name*", data_errormessage = "Enter Contact Person Name" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.totperson, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.TextBoxFor(model => model.totperson, new { @class = "form-control validate[required,custom[integer],min[1],max[10]", autocomplete = "off", placeholder = "No of Persons to Meet*", type = "number", min = "1", max = "10", data_errormessage = "Enter No of Person(s) to Appoinment" })
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.interested, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.TextAreaFor(model => model.interested, new { @class = "form-control validate[required]", autocomplete = "off", placeholder = "Enter Purpose*", data_errormessage = "Enter Purpose to Appointment" })
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.remarks, new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12  spacer10">
+                            @Html.TextAreaFor(model => model.remarks, new { @class = "form-control", autocomplete = "off", placeholder = "Enter Remarks" })
+                        </div>
+                    </div>
+                </div>
+
+                <span class="process"></span>
+
+                @Html.ValidationSummary(true)
+                <div class="panel-footer text-right">
+                    <input type="submit" id="btnSubmit" value="Submit" class="btn btn-themed" />
+                    @*@Html.ActionLink("Cancel", "Index", "InventorySearch", new { @class = "btn btn-default" })*@
+                    <button id="btnreset" class="btn btn-default">Reset</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-ui-1.10.2.js"></script>
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">*@
+<link href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/datepicker.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<link href="~/Content/bootstrap-clockpicker.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap-clockpicker.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+@*<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-validate.bootstrap-tooltip.js")" type="text/javascript"></script>*@
+
+<link href="~/Content/validationEngine.jquery.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.validationEngine-en.js"></script>
+<script src="~/Scripts/jquery.validationEngine.js"></script>
+
+<script type="text/javascript">
+    $('#btnSubmit').on('click', function (e) {
+        e.preventDefault(); var _form = $(this).closest("form");
+        if ($(_form).validationEngine('validate')) {
+            var validator = $(_form).validate(); var anyerror = false; _form.find('input').each(function () { if (!validator.element(this)) { anyerror = true; } }); SetLoadingProc();
+            if (!anyerror) {
+                $.ajax({
+                    url: '@Url.Action("BookAppointment", "Account")',
+                    type: 'POST', data: _form.serialize(), datatype: 'json', async: true,
+                    success: function (data) {
+                        RemoveLoadingProc();
+                        if (data.iserror == 'n') { _form.get(0).reset(); invokeMsg('info', 'Book Appointment', data.msg); }
+                        else { invokeMsg('warning', 'Book Appointment', data.msg); }
+                    },
+                    error: function () { RemoveLoadingProc(); invokeMsg('warning', 'Book Appointment', 'Your Appointment has not been added \n Please try again'); }
+                });
+            } return false;
+        }
+    });
+
+    $('#btnreset').on('click', function () { _form = $(this).closest('form'); _form.get(0).reset(); return false; });
+
+    function DateFormat(field, rules, i, options) { var regex = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/; if (!regex.test(field.val())) { return "Please enter date in dd/MM/yyyy format." } }
+
+    $(function () {
+
+        $.validator.addMethod("date", function (value, element) { var ok = true; try { $.datepicker.parseDate('dd-mm-yy', value); } catch (err) { ok = false; } return ok; });
+        //jQuery.validator.addMethod("validdate",
+        //function (value, element) { return value.match(/^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/); }, "Please enter a date in the format dd-mm-yyyy");
+
+        //$('#BookAppointment').validate({ rules: { appdate: { required: true, date: true, validdate: true } } });
+
+        $('#BookAppointment').validationEngine({ ajaxFormValidation: true, promptPosition: "bottomLeft", scroll: true, maxErrorsPerField: 1 });
+
+        $('.date').datepicker({ startDate: new Date(), format: "dd-mm-yyyy", todayHighlight: true, autoclose: true, });
+
+        $('.clockpicker').clockpicker({ autoclose: true, placement: 'top', align: 'left', donetext: 'Done', 'default': 'now' });
+    });
+</script>

@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    <link rel="shortcut icon" type="image/png" href="~/Content/Images/favicon.ico"/>
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @*<script src="@System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/jqueryval")"></script>*@
+    <script type="text/javascript">
+        $(window).load(function () { $(".se-pre-con").fadeOut("slow"); });
+        $(function () {
+            $(".dropdown").hover(
+                function () {
+                    $('.dropdown-menu', this).stop(true, true).fadeIn("fast");
+                    $(this).toggleClass('open');
+                    $('b', this).toggleClass("caret caret-up");
+                },
+                function () {
+                    $('.dropdown-menu', this).stop(true, true).fadeOut("fast");
+                    $(this).toggleClass('open');
+                    $('b', this).toggleClass("caret caret-up");
+                });
+        });
+    </script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            if (window.location.href === "http://localhost:54744/") {
+                jQuery(".navbar navbar-default ").hide();
+            }
+        });
+
+    </script>
+</head>
+<body>
+    <style type="text/css">
+        .title-navbar {
+            background-color: rgba(248, 248, 248, 0.65) !important;
+        }
+
+        .navbar-default {
+            background-color: rgba(248, 248, 248, 0.51) !important;
+        }
+
+        .panel {
+            background-color: rgba(248, 248, 248, 0.78) !important;
+        }
+    </style>
+    
+    <nav class="navbar navbar-default " role="navigation">
+        <div class="header navbar-fixed-top">
+            <div class="navbar-header">
+                <a class="navbar-brand logo" href="#"></a>
+                <button type="button" class="navbar-toggle"
+                    data-toggle="collapse" data-target="#example-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+            @*<div class="collapse navbar-collapse" id="example-navbar-collapse">
+
+                <ul class="nav navbar-nav navbar-left">
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown menuhide"><a href="#" title="Notifaction"><i class="fa fa-bell-o fa-2x facolor faa-ring" aria-hidden="true"></i><span class="badge">2</span></a></li>
+                    <li class="menuhide"><a href="#" title="Event"><i class="fa fa-calendar fa-2x facolor" aria-hidden="true"></i><span class="badge">0</span></a></li>
+                    <li class="dropdown menuhide"><a href="#" title="E-Mail"><i class="fa fa-envelope-o fa-2x facolor" aria-hidden="true"></i><span class="badge">50</span></a></li>
+                    <li class="dropdown ">
+                        <a href="#" class="dropdown-toggle profilenames" data-toggle="dropdown"><i class="fa fa-user fa-fw facolor" aria-hidden="true"></i><span class="facolor">Profile</span> <i class="fa fa-server facolor" aria-hidden="true"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javscript:void(0);" onclick="alert('Hello...');"><i class="fa fa-calendar fa-fw facolor " aria-hidden="true"></i>&nbsp;<span class="facolor"> MY EVENT SELECTION</span></a></li>
+                            <li><a href="@Url.Action("MyCart", "InventoryCart")" ><i class="fa fa-shopping-cart fa-fw facolor " aria-hidden="true"></i>&nbsp;<span class="facolor"> MY BASKET</span></a></li>
+                            <li><a href="@Url.Action("MyBuyRequest", "InventoryCart")" ><i class="fa fa-eye fa-fw facolor " aria-hidden="true"></i>&nbsp;<span class="facolor"> VIEW REQUEST</span></a></li>
+                            <li class="divider"></li>
+                            <li><a href="javscript:void(0);"><i class="fa fa-clock-o fa-fw fa-spin facolor " aria-hidden="true"></i>&nbsp;<span class="facolor"> MY DDC</span></a></li>
+                            <li class="divider"></li>
+                            <li><a href="javscript:void(0);"><i class="fa fa-search-plus fa-fw facolor " aria-hidden="true"></i>&nbsp;<span class="facolor"> MY SAVED SEARCH </span></a></li>
+                            <li><a href="javscript:void(0);"><i class="fa fa-inbox fa-fw facolor " aria-hidden="true"></i>&nbsp;<span class="facolor"> MY MGS INBOX</span></a></li>
+                            <li><a href="javscript:void(0);"><i class="fa fa-cog fa-spin fa-fw facolor " aria-hidden="true"></i>&nbsp;<span class="facolor">  ACCOUNT SETTINGS</span></a></li>
+                            <li class="divider"></li>
+                            <li>
+                                <button id="btnReset" class="btn btn-warning " onclick="location.href='@Url.Action("LogOff", "Account")'"  style="margin-left: 10%; border-color: #5362be; background-color: #5c6bc0; color: white;"><i class="fa fa-power-off fa-fw" aria-hidden="true"></i>&nbsp;<span class="facolor"> SIGN OUT</span></button></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>*@
+        </div>
+    </nav>
+    @*------------------------------Section Start*@
+    <div style="min-height: 100%; bottom: 0px;">
+        <section>
+            <div id="section">
+                @RenderBody()
+            </div>
+        </section>
+    </div>
+    <div class="clearfix"></div>
+    @*------------------------------Footer Start*@
+    <div class="footer">
+        <div id="footer">
+            <div class="copy">
+                © Silicon Infovision Pvt Ltd. All Rights Reserved @DateTime.Today.Year
+            </div>
+            <div class="poweredby">
+                Powered by <a href="http://siliconinfovision.com">Silicon Infovision Pvt Ltd.</a>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript" src="~/Scripts/Custom/jscommon.js"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+    @*<link href="~/Js-alert/themes/default/theme.min.css" rel="stylesheet" />
+    <script src="~/Js-alert/js/alert.min.js"></script>
+    <link href="~/Js-alert/css/alert.min.css" rel="stylesheet" />*@
+</body>
+</html>

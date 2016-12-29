@@ -1,0 +1,316 @@
+﻿.shapeshadow {
+    margin-bottom: 1%;
+    box-shadow: 1px 2px 10px #6666b3;
+    background: white;
+}
+
+.container {
+    color: #8888b3;
+}
+
+.invselector {
+    margin-bottom: 5%;
+    box-shadow: 0 3px 0 rgba(100,99,177,.43),0 -1px rgba(100,99,177,.26) inset;
+    background: #fbfbfb;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #dcdceb;
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    color: #808080;
+    height: 28px;
+}
+
+    .invselector input {
+        cursor: auto !important;
+    }
+
+.invisible {
+    display: none;
+}
+
+.tblRowL {
+    width: 48%;
+    float: left;
+    margin-right: 2%;
+    border-bottom: 1px dotted #dadaed;
+    height: 20%;
+}
+
+.tblRowR {
+    width: 48%;
+    float: left;
+    margin-left: 2%;
+    border-bottom: 1px dotted #dadaed;
+    height: 20%;
+}
+
+    .tblRowL h5, .tblRowR h5 {
+        width: 20%;
+        float: left;
+        line-height: 30px;
+        margin-top: 20px;
+    }
+
+    .tblRowL .tblCont, .tblRowR .tblCont {
+        width: 80%;
+        float: left;
+        margin-top: 20px;
+    }
+
+.cont-select {
+    width: 40%;
+    float: left;
+}
+
+    .cont-select input {
+        cursor: auto !important;
+    }
+
+.not-cont {
+    width: 10%;
+    float: left;
+    text-align: center;
+    line-height: 30px;
+}
+
+.cont-select-crt {
+    float: right;
+    width: 6%;
+}
+
+.cont-full {
+    width: 90%;
+    float: left;
+}
+
+.multiTextsContainer {
+    max-height: 200px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.invtoggles {
+    float: left;
+    height: 56px;
+    margin-right: -20px;
+    margin-top: -15px;
+    overflow: auto;
+    width: 90%;
+}
+
+    .invtoggles a {
+        margin-left: 5px;
+        /*color: #ed6663;*/
+        color: #ffb5c1;
+        border-radius: 100%;
+        -webkit-box-shadow: inset 1px 1px 3px 0px rgba(142, 142, 142, 0.75);
+        -moz-box-shadow: inset 1px 1px 3px 0px rgba(142, 142, 142, 0.75);
+        box-shadow: inset 1px 1px 3px 0px rgba(142, 142, 142, 0.75);
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        line-height: 20px;
+        text-align: center;
+    }
+
+    .invtoggles div {
+        /*padding: 4px 5px 4px 10px;*/
+        padding: 2px 4px 2px 10px;
+        float: left;
+        margin: 1px 4px;
+        color: #808080;
+        border-bottom: 1px #bcbcdd dotted;
+        border-top: 1px solid #eaebf7;
+        text-transform: uppercase;
+        -webkit-box-shadow: 0px 2px 4px 0px rgba(142, 142, 142, 0.75);
+        -moz-box-shadow: 0px 2px 4px 0px rgba(142, 142, 142, 0.75);
+        box-shadow: 0px 2px 4px 0px rgba(142, 142, 142, 0.75);
+        border-radius: 6px;
+    }
+
+@media (max-width: 768px) {
+    .tblRowL {
+        width: 100%;
+        float: left;
+        margin: 2%;
+        border-bottom: 1px dotted #dadaed;
+        height: 20%;
+    }
+
+    .tblRowR {
+        width: 100%;
+        float: left;
+        border-bottom: 1px dotted #dadaed;
+        height: 20%;
+    }
+
+    .cont-select-crt {
+        float: right;
+        margin-right: 2%;
+        width: 6%;
+    }
+
+    .invselector {
+        margin-bottom: 5%;
+        box-shadow: 0 3px 0 rgba(100,99,177,.43),0 -1px rgba(100,99,177,.26) inset;
+        background: #fbfbfb;
+        padding: 3px;
+    }
+
+    .tblRowL h5, .tblRowR h5 {
+        width: 100%;
+        display: block;
+        float: left;
+        line-height: 30px;
+        margin-top: 1px;
+    }
+
+    .tblRowL .tblCont, .tblRowR .tblCont {
+        width: 100%;
+        float: left;
+        margin-top: -9px;
+    }
+
+    .tblRowL h5, .tblRowR h5 {
+        width: 15% !important;
+        float: left;
+        line-height: 30px;
+        margin-top: 20px;
+        font-size: 12px;
+    }
+
+    .tblRowL .tblCont, .tblRowR .tblCont {
+        width: 85%;
+        float: left;
+        margin-top: 20px;
+    }
+}
+
+/**********************************************************************advanced Search***********************************************************************/
+.advsearch {
+    background-color: rgba(237, 237, 237, 0.55);
+    color: #888dc9;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    padding: 3px;
+    font-weight: 900;
+}
+
+.newrow {
+    margin-right: -15px;
+    margin-left: 0px !important;
+}
+
+.searchfixed {
+    padding-top: 7px;
+    background-color: rgba(136, 141, 201, 0.55);
+    width: 100% !important;
+}
+
+.footerMidSerch {
+    padding: 0 80px;
+    background: #ec798b !important;
+}
+
+.matchPar {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 17px;
+    text-align: center;
+    color: #fff;
+    background: #785da4;
+    padding: 0 15px;
+    margin-right: 5px;
+    height: 40px;
+    line-height: 34px;
+    width: 200px;
+    cursor: pointer;
+}
+
+.saveRes {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 16px;
+    color: #fff;
+    background: #785da4;
+    padding: 0 15px;
+    height: 40px;
+    line-height: 32px;
+}
+
+@media (max-width:320px) {
+    .matchPar {
+        display: inline-block;
+        font-weight: 600;
+        font-size: 13px;
+        text-align: center;
+        color: #fff;
+        background: #785da4;
+        padding: 0 15px;
+        margin-right: 5px;
+        height: 40px;
+        line-height: 32px;
+        width: 100px;
+    }
+
+    .saveRes {
+        display: inline-block;
+        font-weight: 600;
+        font-size: 13px;
+        color: #fff;
+        background: #785da4;
+        padding: 0 15px;
+        height: 40px;
+        line-height: 32px;
+    }
+
+    .advsearch {
+        background-color: rgba(237, 237, 237, 0.55);
+        color: #888dc9;
+        margin-top: 2%;
+        margin-bottom: 5%;
+        padding: 3px;
+        font-weight: 900;
+    }
+}
+
+.msg {
+    font: italic 12px arial;
+    color: #f35e75;
+    text-align: center;
+    padding: 5px 14px;
+}
+
+/*save button **************/
+@media (width: 768px) {
+    .tblRowRsave {
+        width: 50%;
+        float: right;
+        border-bottom: 1px dotted #dadaed;
+        height: 20%;
+    }
+
+    .tblRowLsave {
+        width: 57% !important;
+        margin: 0% !important;
+        position: absolute !important;
+    }
+}
+
+@media (max-width:767px) {
+    .tblRowLsave {
+        display: none !important;
+    }
+
+    .matchPar {
+        width: 150px !important;
+    }
+}
+
+@media (min-width:767px) {
+    .tblRowRavdsearch {
+        display: none !important;
+    }
+}

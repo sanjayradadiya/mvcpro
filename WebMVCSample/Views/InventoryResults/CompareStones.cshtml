@@ -1,0 +1,239 @@
+﻿@{
+    ViewBag.Title = "CompareStones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<style>
+    .shadow {
+        box-shadow: 0 5px 15px rgb(191, 193, 255);
+        margin: auto;
+    }
+
+    #compare_table td {
+        white-space: nowrap;
+        padding: 4px !important;
+    }
+
+    .caption {
+        font-size: 20px;
+        font-weight: 600;
+        color: #6d6ecc;
+    }
+
+    .titlesbar {
+        padding: 2% 0% 3%;
+        border-bottom: 3px double #7d7ee9;
+        margin-bottom: 1%;
+    }
+
+
+    #stDetails {
+        border: 1px dotted rgb(217, 217, 255);
+        overflow:auto;
+    }
+
+    .tdCaption {
+        font-weight: 600;
+        color: #808080;
+    }
+
+    .nav-pills > li > a > i {
+        padding-right: 4px;
+    }
+
+    .checker {
+        padding: 0px 4px;
+    }
+
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 4px;
+    }
+
+    @@page {
+        size: auto;
+        margin: 3mm;
+    }
+</style>
+<div class="container shadow" style="overflow-y: auto;">
+    <div class="col-md-2"></div>
+    <div class="titlesbar">
+        <div class="col-md-3 caption">
+            <i class="fa fa-diamond" aria-hidden="true"></i>
+            <span class="text-uppercase">Compare Stones</span>
+        </div>
+        <div class="col-md-9">
+            <ul class="nav nav-pills">
+                <li>
+                    <a class="btn btn-themed compare-li"><i class="fa fa-exchange"></i>Compare Stone</a>
+                </li>
+                <li>
+                    <a class="btn btn-themed compareDwn-li"><i class="fa fa-file-excel-o"></i>Download Stock</a>
+                </li>
+                <li>
+                    <a class="btn btn-themed popupinvclk" show-popup="#EmailModal"><i class="fa fa-envelope"></i>Email</a>
+                </li>
+                <li>
+                    <a onclick="location.reload(true);" class="btn btn-themed"><i class="fa fa-refresh"></i>Refresh</a>
+                </li>
+                <li>
+                    <a onclick="window.close();" class="btn btn-themed"><i class="fa fa-close"></i>Close</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="stDetails" class="table table-responsive">
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+<div id="EmailModal" class="popup" style="display: none;">
+    <div class="popupcon popupmodal">
+        <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+        <div class="popuphead">Email Details</div>
+        <div class="popupcenter">
+            <div class="row-fluid">
+                <div class="col-md-12">
+                    @Html.Label("Email Id", new { @class = "control-label" })
+                </div>
+                <div class="col-md-12 spacer10">
+                    @Html.TextBox("EmailId", Convert.ToString(@Session["Emailid"]), new { @class = "form-control", placeholder = "*Comma',' separated list to send multiple Mails" })
+                </div>
+                <div class="col-md-12">
+                    @Html.Label("Subject", new { @class = "control-label" })
+                </div>
+                <div class="col-md-12 spacer10">
+                    @Html.TextBox("Subject", "Selected Compare Stock Dettails @ " + Convert.ToString(@Session["global-website"]), new { @class = "form-control", placeholder = "Subject.." })
+                </div>
+                <div class="col-md-12">
+                    @Html.Label("Message", new { @class = "control-label" })
+                </div>
+                <div class="col-md-12">
+                    @Html.TextArea("Message", "", new { @class = "form-control", rows = 5 })
+                </div>
+            </div>
+        </div>
+        <div class="popupfoot">
+            <div class="float-right">
+                <a href="javascript:void(0);" id="btnSend" data-response-val="#respAlert" data-request-url="@Url.Action("CompareStockMail", "InventoryResults")" class="btn btn-themed">Send</a>
+                <a href="javascript:void(0);" id="btnCancel" class="btn btn-default cancel">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/Custom/jscommon.js"></script>
+<script type="text/javascript">
+    $(function () {
+        if (window.location.search != '') return;
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            datatype: 'json', type: "POST",
+            url: '@Url.Action("CompareStones", "InventoryResults")',
+            success: function (data) { $('#stDetails').html(formatTable(data.aaData)); },
+            error: function () { SetNotify("warning", "Newtwork related issues may caused, please try again"); }
+        }).complete(function () { /*RemoveLoadingProc();*/ });
+
+        //function resetTable() {
+        //    var ht = $(window).height();
+        //    $('#stDetails').height(ht - 210);
+        //}
+        //resetTable();
+        //$(window).resize(resetTable);
+        function resetTable() {
+            var ht = $(window).height();
+            $('.shadow').height(ht - 110);
+        }
+        resetTable();
+        $(window).resize(resetTable);
+    });
+
+    var locid;
+    $('.compare-li').click(function () {
+        var curvals = $('#compare_table tr:nth-child(1) input[type="checkbox"]:checked').map(function () { return $(this).val() }).get().join(',');
+        if (curvals != '') {
+            locid = "@Guid.NewGuid()"; setCookie(locid, curvals, 1);
+                $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    url: '/InventoryResults/CompareStones?tg=' + locid, type: 'GET', datatype: 'json',
+                    success: function (data) { $('#stDetails').html(formatTable(data.aaData)); },
+                    error: function () { setCookie(locid, '', -1); SetNotify("warning", "Stock details not found ,Please try again"); window.close(); }
+                });
+            } else { SetNotify("warning", "Please select minimum number of stones"); }
+    });
+
+        function formatTable(data) {
+            var res = '';
+            var tabHeaders = ["Stock Id", "Lab", "Report No", "Cts", "Color", "Clarity", "Cut", "Polish", "Sym", "Fls", "Rap.($)", "Rate($)",
+                "Disc.(%)", "Depth", "Table(%)", "Measurement", "Girdle", "Culet", "Inscription", "Dia", "H&A", "Inclusion", "Crown", "C/A",
+                "C/H", "Pavilion", "P/A", "P/H", "S/L", "L/H", "Luster", "Milky", "Shade", "Natts", "Natural", "Pair", "Key to Symbol", "Rep.Comment"];
+
+            res += "<table class='table table-striped table-bordered' id='compare_table' align='center'>";
+            for (i = 0; i < tabHeaders.length; i++) {
+                var dets = data; res += "<tr>"; res += "<th class='tdCaption'>" + tabHeaders[i] + "</th>";
+                for (j = 0; j < dets.length; j++) {
+                    if (i == 0) {
+                        res += "<td style='min-width:180px;'> <span class='checker'><input type='checkbox' class='compareChks' value='" + dets[j][0] + "'></span>" + dets[j][i];
+                        res += "<button class='close' onclick='columnHide(this)'>x</button></td>";
+                    }
+                    else res += "<td>" + dets[j][i] + "</td>";
+                } res += "</tr>";
+            } res += "</table>";
+
+            return res;
+        }
+
+        function columnHide(that) {
+            var tableTd = $(that).parents('td').index();
+            $('#compare_table tr').each(function () { $('td:eq(' + parseInt(tableTd - 1) + ')', this).fadeOut(); });
+            return false;
+        }
+
+        window.onbeforeunload = function () { setCookie(locid, '', -1) }
+
+        $(".popupinvclk").on("click", function (event) {
+            var retval = getSelecteds(true); if (retval === '') { return false; } var popid = $(this).attr("show-popup");
+            $(popid).fadeIn(300, function () { $(document).keyup(function (e) { if (e.keyCode == 27) $('.popupclose').click(); }); });
+            function poppos() {
+                var wh = $(window).height(); var ph = $(popid + ">" + ".popupcon").innerHeight(); var popp = wh / 2 - ph / 2;
+                if (popp <= 0) { popp = 0; } $(popid).find(".popupcon").fadeIn().stop(true, false).animate({ top: popp, opacity: 1 }, 400);
+            } poppos(); $(window).resize(poppos);
+        });
+
+        $('.compareDwn-li').click(function () {
+            var retval = getSelecteds(true);
+            if (retval === '') { RemoveLoadingProc(); return false; } SetLoadingProc();
+            $.ajax({
+                url: '@Url.Action("CompareExcel", "InventoryResults")', data: JSON.stringify({ refnos: retval }),
+                datatype: 'json', type: "POST", contentType: 'application/json; charset=utf-8', success: function (resp) { if (resp.status == "200") location.href = '@Url.Action("CompareExcel", "InventoryResults")'; else { RemoveLoadingProc(); SetNotify("error", "Please try again.."); } }
+            }).complete(function () { RemoveLoadingProc(); });
+        });
+
+        $('#btnSend').on('click', function () {
+            var retval = getSelecteds(false);
+            if ($('#EmailId').val() == '') { RemoveLoadingProc(); SetNotify("warning", "Mail address could not be blank"); return false; }
+            var params = { 'To': $('#EmailId').val(), 'Subject': $('#Subject').val(), 'Message': $('#Message').val(), 'refnos': retval };
+            if (retval === '') { RemoveLoadingProc(); return false; }
+            raiseMail(this, params);
+        });
+
+        function raiseMail(obj, params) {
+            SetLoadingProc();
+            $.ajax({
+                url: $(obj).data('request-url'), contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(params), datatype: 'json', type: "POST", async: true,
+                success: function (response) {
+                    if (response == "1") { RemoveLoadingProc(); /*invokeMsg('info', 'Mail', 'Mail sent successfully..');*/SetNotify("success", "Mail has been sent Successfully.."); }
+                    else { RemoveLoadingProc(); /*invokeMsg('warning', 'Mail', 'Mail sent failure, Please try again..');*/ SetNotify("warning", "Mail sent failure, Please try again.."); }
+                },
+                error: function () { RemoveLoadingProc(); invokeMsg('warning', 'Error', 'Network related issues may caused..'); }
+            }).complete(function () { RemoveLoadingProc(); });
+        }
+
+        function getSelecteds(flag) {
+            var curvals = $('#compare_table tr:nth-child(1) input[type="checkbox"]:checked').map(function () { return $(this).val() }).get().join(',');
+            if (curvals.length == 0) {
+                var conf; if (flag) { conf = confirm('Do you want to mail all Compare results..?'); } else { conf = true; }
+                if (conf === false) { curvals = ''; } else { curvals = $('#compare_table tr:nth-child(1) input[type="checkbox"]').map(function () { return $(this).val() }).get().join(','); }
+            }
+            return curvals;
+        }
+</script>

@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+
+@Styles.Render("~/Content/datatable_css")
+<link href="~/Content/Custom/processes.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/datatable")
+@*<link type="text/css" href="~/Content/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/dataTables.jqueryui.min.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/select.jqueryui.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/JDatatables11012/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/JDatatables11012/js/dataTables.jqueryui.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.24.min.js"></script>*@
+<div class="col-md-12">
+    <div class="titlesbar">
+        <div class="col-md-6 caption">
+            <i class="fa fa-cog fa-spin font-yellow-crusta" aria-hidden="true"></i>&nbsp;<span class="text-uppercase">Settings</span>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div id="GuestResults" class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row-fluid col-md-12">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <table id="guestmasView" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>SrNo.</th>
+                                <th>Prepare</th>
+                                <th>Value</th>
+                                <th style="width: 125px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row-fluid col-md-12">
+        @Html.Hidden("ActMethod", "Settings")
+    </div>
+
+    <div id="settModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">Settings</div>
+            <div class="popupcenter">
+                <form id="frmProc">
+                    <div class="row-fluid">
+                        <div class="col-md-12">
+                            @Html.Label("Process Name", new { id = "lbltitle", @class = "control-label" })
+                        </div>
+                        <div class="col-md-12">
+                            @Html.TextBox("mPrcVal", null, new { @class = "form-control invselector", placeholder = "Write Setting value here" })
+                        </div>
+                        <div class="col-md-12 spacer10">
+                            @Html.Hidden("mProcEvent")
+                            @Html.Hidden("PrcId")
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="popupfoot">
+                <div class="float-right">
+                    <a href="javascript:void(0);" id="btnSet" data-response-val="#respAlert" class="btn btn-themed">
+                        <i class="fa fa-check-circle"></i>&nbsp;Send</a>
+                    <a href="javascript:void(0);" id="btnCancel" class="btn btn-default cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+
+        <script language="javascript" type="text/javascript">
+            var curgrid = '#guestmasView';
+            $(document).ready(function () {
+                var sMethod = $("#ActMethod").val(); urlReq = '@Url.Action("serverMethod")';
+                var oTable = drawDataTable();
+                /*-------------------------------------*/
+                function drawDataTable(additionalData) {
+                    /*SetLoadingProc();*/
+                    var oTable = $(curgrid).DataTable({
+                        oLanguage: { sProcessing: "<img src='../../Content/images/loader.gif'>" },
+                        bProcessing: true, serverSide: true, bSort: false, sAjaxSource: urlReq.replace("serverMethod", sMethod),
+                        aLengthMenu: [25, 50, 100], iDisplayLength: 25, bLengthChange: true, bDestroy: true, bAutoWidth: false,
+                        sEmptyTable: "Loading data from server", searching: false, paging: false, scrollX: true, scrollY: "355px",
+                        stateSave: false,
+                        fnServerData: function (sSource, aaData, fnCallback) {
+                            if (additionalData != undefined) { aaData.push(additionalData[0]); aaData.push(additionalData[1]); }
+                            $.ajax({ "dataType": 'json', "type": "POST", "url": sSource, "data": aaData, "success": fnCallback }).complete(function () { /*RemoveLoadingProc();*/ });
+                        },
+                        fnCreatedRow: function (nRow, aData, iDataIndex) {
+                            $(nRow).attr('id', aData[0])
+                            $('td:eq(3)', nRow).html('<a class="btn btn-primary btn-action" href="javascript:void(0)" title="Hapus" onclick="procDets(this)"><i class="glyphicon glyphicon-edit"></i></a>');
+                        },
+                    }); return oTable;
+                }
+
+                $("#txtLoginNm").autocomplete({
+                    source: function (request, response) { $.ajax({ url: "@Url.Action("LoginNames", "Account")", type: "POST", dataType: "json", data: { Prefix: request.term }, success: function (data) { response($.map(data, function (item) { return { label: item.Name, value: item.Name }; })) } }) },
+                    messages: { noResults: "", results: "" }
+                });
+            });
+
+                function procDets(obj) { var currow = $(obj).closest('tr'); var rowId = $(currow).attr('id'); $('#lbltitle').html($(currow).find('td:nth-child(2)').html()); $('#mPrcVal').val($(currow).find('td:nth-child(3)').html()); callPopup(); }
+
+                $('#btnSet').on('click', function () {
+                    var arr = { "name": $('#lbltitle').html(), "value": $('#mPrcVal').val() }; $.ajax({
+                        url: "@Url.Action("HandleSets", "Dashboard")", type: 'POST', datatype: 'JSON', data: arr,
+                        success: function (data) { if (!data.isError) { alert(data.msg); $('.popupclose').click(); location.href = "@Url.Action("Settings", "Dashboard")" } else { alert(data.msg); } }, error: function () { alert("Something went wrong"); }
+                    });
+                });
+
+                function callPopup() {
+                    var popid = $("#settModal");
+                    $(popid).fadeIn(300, function () { $(document).keyup(function (e) { if (e.keyCode == 27) $('.popupclose').click(); }); });
+                    function poppos() {
+                        var wh = $(window).height(); var ph = $(popid).find('.popupcon').innerHeight(); var popp = wh / 2 - ph / 2; if (popp <= 0) { popp = 0; }
+                        $(popid).find(".popupcon").fadeIn().stop(true, false).animate({ top: popp, opacity: 1 }, 400);
+                    } poppos(); $(window).resize(poppos);
+                }
+        </script>
+        <style>
+            .fg-toolbar, .ui-toolbar, .ui-widget-header, .ui-helper-clearfix, .ui-corner-tl, .ui-corner-tr {
+                display: none;
+            }
+        </style>
+        <link href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+        <link href="~/Content/Custom/custom-table.css" rel="stylesheet" />
+    </div>
+</div>

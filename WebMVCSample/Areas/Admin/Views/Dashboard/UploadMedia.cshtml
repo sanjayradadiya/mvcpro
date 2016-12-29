@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Title = "UploadMedia";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+
+@Styles.Render("~/Content/fileInputBundle")
+
+@*<link href="~/Content/fileUploader/fileinput.css" rel="stylesheet" />
+<link href="~/Content/fileUploader/fileinput.min.css" rel="stylesheet" />*@
+<script src="~/Scripts/fileUploader/fileinput.js"></script>
+@*<link href="~/Content/fileUploader/customfileInput.css" rel="stylesheet" />*@
+
+<div class="container">
+    <div class="row shadow maindiv">
+        <div class="container-fluid">
+            <div class="col-md-12 titlesbar">
+                <div class="col-md-6">
+                    <div class="caption"><i class="fa fa-cloud-upload"></i><span style="padding-right: 6px;"></span>Image / Certificate / Video Uploader</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 bhoechie-tab-container">
+                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active text-left">
+                            <h4 class="glyphicon glyphicon-eye-open"></h4>
+                            <span class="disptitles">Digital</span>
+                        </a>
+                        <a href="#" class="list-group-item text-left">
+                            <h4 class="glyphicon glyphicon-eye-open"></h4>
+                            <span class="disptitles">Arrow</span>
+                        </a>
+                        <a href="#" class="list-group-item text-left">
+                            <h4 class="glyphicon glyphicon-eye-open"></h4>
+                            <span class="disptitles">Asset</span>
+                        </a>
+                        <a href="#" class="list-group-item text-left">
+                            <h4 class="glyphicon glyphicon-eye-open"></h4>
+                            <span class="disptitles">Heart</span>
+                        </a>
+                        <a href="#" class="list-group-item text-left">
+                            <h4 class="glyphicon glyphicon-eye-open"></h4>
+                            <span class="disptitles">Ideal</span>
+                        </a>
+                        <a href="#" class="list-group-item text-left">
+                            <h4 class="glyphicon glyphicon-certificate"></h4>
+                            <span class="disptitles">Certificate </span>
+                        </a>
+                        <a href="#" class="list-group-item text-left">
+                            <h4 class="glyphicon glyphicon-facetime-video"></h4>
+                            <span class="disptitles">Video (.mp4)</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-10 col-md-9 col-sm-9 col-xs-9 bhoechie-tab panel-uploads">
+                    <!-- flight section -->
+                    <div class="bhoechie-tab-content active">
+                        <form enctype="multipart/form-data">
+                            <label>Digital Image Upload</label>
+                            <input id="file-dg" name="file-dg[]" type="file" multiple>
+                        </form>
+                    </div>
+                    <!-- train section -->
+                    <div class="bhoechie-tab-content">
+                        <form enctype="multipart/form-data">
+                            <label>Arrow Image Upload</label>
+                            <input id="file-arr" name="file-arr[]" type="file" multiple>
+                        </form>
+                    </div>
+
+                    <!-- hotel search -->
+                    <div class="bhoechie-tab-content">
+                        <form enctype="multipart/form-data">
+                            <label>Asset Image Upload</label>
+                            <input id="file-ass" name="file-ass[]" type="file" multiple>
+                        </form>
+                    </div>
+                    <div class="bhoechie-tab-content">
+                        <form enctype="multipart/form-data">
+                            <label>Heart Image Upload</label>
+                            <input id="file-hr" name="file-hr[]" type="file" multiple>
+                        </form>
+                    </div>
+                    <div class="bhoechie-tab-content">
+                        <form enctype="multipart/form-data">
+                            <label>Ideal Image Upload</label>
+                            <input id="file-idl" name="file-idl[]" type="file" multiple>
+                        </form>
+                    </div>
+                    <div class="bhoechie-tab-content">
+                        <form enctype="multipart/form-data">
+                            <label>Certificate Image Upload</label>
+                            <input id="file-cr" name="file-cr[]" type="file" multiple>
+                        </form>
+                    </div>
+                    <div class="bhoechie-tab-content">
+                        <form enctype="multipart/form-data">
+                            <label>Video Upload</label>
+                            <input id="file-vd" name="file-vd[]" type="file" multiple>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/Custom/CustomfileInput.js"></script>
+    <script type="text/javascript">
+        $('#file-dg, #file-arr, #file-ass, #file-hr, #file-idl, #file-cr').fileinput({
+            language: 'fr', type: 'POST',
+            uploadUrl: '@Url.Action("UploadMedia", "Dashboard")',
+            allowedFileExtensions: ['jpg'],
+            allowedFileTypes: ['image'],
+            maxFileCount: 20,
+            uploadAsync: true,
+            msgSizeTooLarge: "File {name} ({size} KB) exceeds maximum upload size of {maxSize} KB. Please Try again",
+            msgFilesTooMany: "Number of Files selected for upload ({n}) exceeds maximum allowed limit of {m}",
+            msgInvalidFileType: 'Invalid type for file "{name}". Only {types} files are supported.',
+            msgInvalidFileExtension: 'Invalid extension for file {name}. Only "{extensions} files are supported.',
+        });
+        $('#file-vd').fileinput({ language: 'fr', uploadUrl: '#', allowedFileExtensions: ['mp4'], });
+
+        //$('#file-fr1').fileinput({ language: 'fr', uploadUrl: '#', allowedFileExtensions: ['jpg', 'png', 'gif'], });
+        //$("#file-0").fileinput({ 'allowedFileExtensions': ['jpg', 'png', 'gif'], });
+    </script>
+</div>

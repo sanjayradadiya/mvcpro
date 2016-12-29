@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "StoneDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/Custom/stonedets.css" rel="stylesheet" />
+<style>
+    .shadow {
+        box-shadow: 0 5px 15px rgb(191, 193, 255);
+        margin: 1% auto;
+        padding: 1% 2%;
+    }
+
+    .nav .open > a, .nav .open > a:focus, .nav .open > a:hover {
+        background-color: #6666d1 !important;
+        border-color: #337ab7;
+    }
+</style>
+<div class="container">
+    <div class="container-fluid shadow">
+
+        <div class="col-md-12 ">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4 nonprint">
+                <ul class="nav nav-pills">
+                    <li>
+                        <a class="btn btn-themed compareDwn-li" data-toggle="dropdown" data-placement="bottom" data-original-title="Download Stock,Images,Certuficates,Videos." aria-expanded="true"><i class="fa fa-download"></i>&nbsp;Download Stock</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="stoneDetImg" data-req-url="@Url.Action("DownloadContent", "Download")"><i class="fa fa-download"></i>&nbsp; Image</a></li>
+                            <li><a class="stoneDetCert" data-req-url="@Url.Action("DownloadContent", "Download")"><i class="fa fa-download"></i>&nbsp; Certificate</a></li>
+                            <li><a class="stoneDetVideo" data-req-url="@Url.Action("DownloadContent", "Download")"><i class="fa fa-download"></i>&nbsp; Video</a></li>
+                            <li><a class="stoneDetAll" data-req-url="@Url.Action("DownloadContent", "Download")"><i class="fa fa-download"></i>&nbsp; All</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        @*<a onclick="javascript:printContent('RefNoDetails');" class="btn btn-themed"><i class="fa fa-print"></i>Print</a>*@
+                        <a onclick="window.print();" class="btn btn-themed"><i class="fa fa-print"></i>&nbsp;Print</a>
+                    </li>
+
+                    @*<li> <a class="btn-themed popupinvclk" show-popup="#EmailModal"><i class="fa fa-envelope"></i>Email</a> </li>*@
+                </ul>
+            </div>
+        </div>
+
+        <div id="RefNoDetails">
+            <div class="diadetail">
+                <h4 style="margin-top: 8px;">STONE DETAIL</h4>
+            </div>
+
+            <div class="col-md-12 diadata" style="padding-left: 20px !important;">
+                <span class="stDetails"></span>
+            </div>
+
+            <div class="diadetail" data-toggle="collapse" data-target="#imgdet">
+                <h4>STONE  IMAGE AND VIDEO</h4>
+            </div>
+
+            <div class="col-md-12 col-12" id="imgdet">
+                <div class="col-md-6">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-5 col-md-5 col-sm-8 col-xs-9 bhoechie-tab-container">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
+                                    <div class="list-group"></div>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-6">
+                    <div class="diavideo"></div>
+                    <script>
+                        $(function () {
+                            $('.video').on('mouseenter', function () {
+                                if (this.paused) this.play();
+                            }).on('mouseleave', function () {
+                                if (!this.paused) this.pause();
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+
+            <div class="diadetail" data-toggle="collapse" data-target="#certi">
+                <h4 class="h4Cert">STONE Certificate
+        <span style="text-align: right;"></span>
+                </h4>
+            </div>
+            <div class="col-md-12 col-12" id="certi">
+            </div>
+
+            <script src="~/Scripts/Custom/StoneDets.js"></script>
+        </div>
+
+    </div>
+</div>

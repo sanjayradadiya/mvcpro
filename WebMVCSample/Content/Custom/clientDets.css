@@ -1,0 +1,81 @@
+﻿.btn-action {
+    padding: 2px 4px;
+    font-size: 9px;
+}
+
+.invselector {
+    margin-bottom: 5%;
+    box-shadow: 0 3px 0 rgba(100,99,177,.43),0 -1px rgba(100,99,177,.26) inset;
+    background: #fbfbfb;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #dcdceb;
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    color: #808080;
+    height: 28px;
+}
+
+    .invselector input {
+        cursor: auto !important;
+    }
+
+.ui-autocomplete {
+    position: absolute;
+    cursor: default;
+    background: #fbfbfb;
+}
+
+/* workarounds */
+html .ui-autocomplete {
+    width: 1px;
+}
+/* without this, the menu expands to 100% in IE6 */
+.ui-menu {
+    list-style: none;
+    padding: 2px;
+    margin: 0;
+    display: block;
+    float: left;
+}
+
+    .ui-menu .ui-menu {
+        margin-top: -3px;
+    }
+
+    .ui-menu .ui-menu-item {
+        margin: 0;
+        padding: 0;
+        zoom: 1;
+        float: left;
+        clear: left;
+        width: 100%;
+        font-size: 12px;
+        border-bottom: 1px dotted #696bc5;
+    }
+
+        .ui-menu .ui-menu-item a {
+            text-decoration: none;
+            display: block;
+            padding: .2em .4em;
+            line-height: 1.5;
+            zoom: 1;
+        }
+
+            .ui-menu .ui-menu-item a.ui-state-hover,
+            .ui-menu .ui-menu-item a.ui-state-active {
+                font-weight: normal;
+                margin: -1px;
+            }
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+    border: 1px solid #cbccff !important;
+    background: #e6e6ff !important;
+    font-weight: normal;
+    color: #212121;
+}
+
+ul.ui-autocomplete.ui-menu {
+    width: auto;
+}

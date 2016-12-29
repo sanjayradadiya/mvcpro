@@ -1,0 +1,87 @@
+﻿@model WebInventory.ViewModels.LoginVM
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<link href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<link href="~/Content/validationEngine.jquery.css" rel="stylesheet" />
+<style type="text/css">
+    body {
+        background: url(../content/Images/pattern.png) 0 bottom repeat !important;
+    }
+</style>
+<div class="container" style="margin-top: 10px;">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <fieldset>
+                        <legend>
+                            <span class="group-addon fa-titles"><i class="fa fa-user"></i></span>
+                            <h2 style="margin-left: 6%;">Sign in</h2>
+                        </legend>
+                        <form id="signin">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true)
+                            <div class="col-md-16">
+                                <div id="divMessage" class="row-fluid text-center alert alert-danger" style="display: none;">
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Username, new { @class = "control-label" })
+                                </div>
+                                <div class="col-md-12 spacer10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                        @Html.TextBoxFor(model => model.Username, new { @class = "form-control validate[required]", autocomplete = "off", placeholder = "Enter login name here", data_errormessage = "User Name is required" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Password, new { @class = "control-label" })
+                                </div>
+                                <div class="col-md-12 spacer10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                        @Html.PasswordFor(model => model.Password, new { @class = "form-control validate[required]", autocomplete = "off", value = Model.Password, placeholder = "Enter password here", data_errormessage = "Password is required" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 spacer10 text-center">
+                                    @Html.CheckBoxFor(model => model.RememberMe) Remember me
+
+                                    @*<span class="pull-right">
+                                        @Html.ActionLink("Forgot Password?", "ForgotPassword")
+                                    </span>*@
+                                </div>
+
+                                <div class="row-fluid">
+                                    <input type="submit" id="btnlogin" value="Sign in" class="btn btn-themed" data-requesturl="/Admin/Account/" style="display: block; width: 100%;" />
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="col-md-12 spacerM10 text-center">
+                                        Visit <a href="www.mothergems.in">Main WebSite</a>
+                                    </div>
+                                </div>
+                                @*                                <div class="row-fluid">
+                                    <div class="col-md-12 spacerM10">
+                                        Don't have an account yet? @Html.ActionLink("Create an account", "signup")
+                                    </div>
+                                </div>*@
+                            </div>
+                        </form>
+                    </fieldset>
+                    @*<div class="col-md-6"></div>*@
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery.validationEngine-en.js"></script>
+<script src="~/Scripts/jquery.validationEngine.js"></script>
+<script src="~/Scripts/Custom/account.js"></script>

@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "UploadEmailFile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/fileInputBundle");
+<script src="~/Scripts/fileUploader/fileinput.js"></script>
+
+<div class="container">
+    <div class="row shadow maindiv">
+        <div class="container-fluid">
+            <div class="col-md-12 titlesbar">
+                <div class="col-md-6">
+                    <div class="caption"><i class="fa fa-cloud-upload"></i><span style="padding-right: 6px;"></span>Import Cart/ Orders</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 bhoechie-tab-container">
+                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active text-left">
+                            <h4 class="fa fa-file-excel-o"></h4>
+                            <span class="disptitles">Excel (.xlsx)</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-10 col-md-9 col-sm-9 col-xs-9 bhoechie-tab panel-uploads">
+                    <!-- File section -->
+                    <div class="bhoechie-tab-content active">
+                        <form enctype="multipart/form-data">
+                            <label>Email Excel File Upload</label>
+                            <input id="file-excel" name="file-excel[]" type="file" multiple>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#file-excel').fileinput({
+            language: 'fr', type: 'POST',
+            uploadUrl: '@Url.Action("UploadCart", "InventoryCart")',
+            allowedFileExtensions: ['xlsx'],
+            maxFileCount: 1, uploadAsync: true,
+            msgSizeTooLarge: "File {name} ({size} KB) exceeds maximum upload size of {maxSize} KB. Please Try again",
+            msgFilesTooMany: "Number of Files selected for upload ({n}) exceeds maximum allowed limit of {m}",
+            msgInvalidFileType: 'Invalid type for file "{name}". Only {types} files are supported.',
+            msgInvalidFileExtension: 'Invalid extension for file {name}. Only "{extensions} files are supported.',
+            onUploadSuccess: function (resp) { debugger; alert(resp.msg); },
+        });
+
+        $('#file-excel').on('fileuploaded', function (event, data, previewId, index) {
+            response = data.response;
+            window.location = response.respUrl;
+        });
+    </script>
+    <script src="~/Scripts/Custom/CustomfileInput.js"></script>
+</div>

@@ -1,0 +1,58 @@
+﻿@using WebInventory.Common;
+@{
+    ViewBag.Title = "ColumnMap";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+<link href="~/Content/Custom/compndets.css" rel="stylesheet" />
+<style type="text/css">
+    
+</style>
+<div class="container">
+    <div class="row shadow maindiv" style="padding-bottom: 5px;">
+        <div class="container-fluid">
+           
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <script type="text/javascript">
+        $(function () {
+            function resizeWin() {
+                var winh = $(window).innerHeight(); var navh = $('.navbar').height(); var tith = $('.titlesbar').height();
+                minhght = winh - navh - tith - 154; $('.mappers').height(minhght);
+            } resizeWin(); $(window).resize(resizeWin);
+            var sel = '';
+            $("select").each(function () { sel += this.id + '@@' + this.value + ',' });
+            if (sel != '') { $('#hdnPrimary').val(sel); }
+            $('#clearLists').on('click', function () { var res = $("select").each(function () { this.selectedIndex = 0; $(this).removeClass('errSelector'); }); });
+            $('#btnCancel').on('click', function () { window.location = $(this).data('requrl'); });
+            $('#atuoLists').on('click', function () {
+                var selectors = $('#hdnPrimary').val().split(','); $("select").each(function () { $(this).removeClass('errSelector'); });
+                $.each(selectors, function (index, item) { if (item != '') { var collection = item.split('@@'); $('#' + collection[0]).val(collection[1]); } });
+            });
+            $('#btnVerify').on('click', function () {
+                if ($(".errSelector").length > 0) {
+                    SetNotify("error", "Some of fields required mapping"); return false;
+                }
+                mapCols = new Array();
+                $("select").map(function () { mapCols.push($(this).val()); });
+                $.ajax({
+                    url: '@Url.Action("ValidateFile")',
+                    data: JSON.stringify({ 'mappedCols': mapCols }),
+                    datatype: 'json',
+                    type: 'POST', async: true,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (resp) { console.log(resp.res); },
+                    error: function (resp) { console.log('something went wrong'); }
+                });
+            });
+            $("select").change(function () {
+                var isvalid = $(this).hasClass('required');
+                if (isvalid == true && $(this).val() == '') {
+                    if ($(this).hasClass('errSelector') != true) { $(this).addClass('errSelector'); }
+                    else { $(this).removeClass('errSelector'); }
+                }
+                else { $(this).removeClass('errSelector'); }
+            });
+        });
+    </script>
+</div>

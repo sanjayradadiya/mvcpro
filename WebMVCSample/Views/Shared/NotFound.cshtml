@@ -1,0 +1,86 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>NotFound</title>
+    <link type="text/css" href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+    <link type="text/css" href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/404/custom.css" rel="stylesheet" />
+    <link href="~/Content/404/animate.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/png" href="~/Content/Images/favicon.ico"/>
+</head>
+<body>
+    <body>
+
+        <section>
+            <div class="container">
+                <div class="row row1">
+                    <div class="col-md-12">
+                        <h3 class="center capital f1 wow fadeInLeft" data-wow-duration="2s">Something went Wrong!</h3>
+                        <h1 id="error" class="center wow fadeInRight" data-wow-duration="2s">0</h1>
+                        <p class="center wow bounceIn" data-wow-delay="2s">Page not Found!</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="cflask-holder" class="wow fadeIn" data-wow-delay="2800ms">
+                            <span class="wow tada " data-wow-delay="3000ms"><i class="fa fa-flask fa-5x flask wow flip" data-wow-delay="3300ms"></i>
+                                <i id="b1" class="bubble"></i>
+                                <i id="b2" class="bubble"></i>
+                                <i id="b3" class="bubble"></i>
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 center">
+                        <a  href="/Account">
+                            <img src="~/Content/Images/logo.png" /></a>
+                    </div>
+                    <div class="col-md-12">
+                        <h3 class="center wow fadeInRight"><a href="/">Get Back </a></h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--ADDING THE REQUIRED SCRIPT FILES-->
+        <script type="text/javascript" src="~/Scripts/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="~/Scripts/404/countUp.js"></script>
+        <script type="text/javascript" src="~/Scripts/404/wow.js"></script>
+
+        <!--Initiating the CountUp Script-->
+        <script type="text/javascript">
+            "use strict";
+            var count = new countUp("error", 0, 404, 0, 3);
+
+            window.onload = function () {
+                // fire animation
+                count.start();
+            }
+        </script>
+
+        <!--Initiating the Wow Script-->
+        <script>
+            "use strict";
+            var wow = new WOW(
+            {
+                animateClass: 'animated',
+                offset: 100
+            }
+        );
+            wow.init();
+        </script>
+
+
+    </body>
+</body>
+</html>

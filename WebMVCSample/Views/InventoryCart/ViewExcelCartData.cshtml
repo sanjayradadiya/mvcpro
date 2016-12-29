@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "ViewExcelCartData";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .titlesbar {
+        padding: 0.8% 0%;
+        margin-bottom: 4px;
+    }
+
+    .table > tbody > tr > td, .table > tbody > tr > th {
+        padding: 5px !important;
+        width: 1000px;
+    }
+
+    .shadow {
+        box-shadow: 0 5px 15px rgb(191, 193, 255);
+        margin: 0px auto 20px;
+    }
+
+    /*tbody {
+        display: block;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .divtab {
+        height: calc(100% - 42%) !important;
+        height: -webkit-calc(100% - 42%) !important;
+        height: -moz-calc(100% - 42%) !important;
+    }*/
+    .sptag {
+        font: bold 13px verdana;
+    }
+</style>
+
+<div class="container">
+    <div class="row shadow maindiv">
+        <div class="container-fluid">
+
+            <div class="col-md-12 titlesbar">
+                <div class="caption"><i class="fa fa-cloud-upload"></i><span style="padding-right: 6px;"></span>Excel data for Cart / Orders </div>
+            </div>
+            <div class="col-md-3">
+                <div class="col-md-12">
+                    @Html.RadioButton("carttype", "Cart", true) <span class="sptag">Add to Cart</span>
+                </div>
+                <div class="col-md-12"></div>
+                <div class="col-md-12">
+                    @Html.RadioButton("carttype", "BuyNow") <span class="sptag">Add to Buy Now</span>
+                </div>
+                <div class="col-md-12">&nbsp;</div>
+                <div class="col-md-12">
+                    <a class="btn btn-themed" id="btnSync" data-request-url="@Url.Action("ViewExcelCartData", "InventoryCart")" >Submit</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <table class="table table-bordered table-responsive">
+                    <thead>
+                        <tr>
+                            <th style="background-color: #e5e5ff">Stone ID</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divtab" style="height: 10%;">
+                        @if (ViewBag.CartData != null)
+                        {
+                            string strdata = string.Empty;
+
+                            foreach (var rowdata in ViewBag.CartData)
+                            {
+                            <tr>
+                                <td>
+                                    <span>@rowdata </span>
+                                </td>
+                            </tr>
+                            }
+
+                        }
+                        else
+                        { 
+                            <h3>Something went wrong</h3>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <script type="text/javascript">
+            $('#btnSync').on("click", function (e) {
+                $.ajax({
+                    url: $(this).data('request-url'), contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ "CartType": $('input[name="carttype"]:checked').val() }), datatype: 'json', type: "POST", async: true,
+                    success: function (data) {
+                        debugger;
+                        //SetNotify("success", data.msg);
+                        alert(data.msg);
+                        window.location = data.retUrl;
+                    },
+                    error: function () { RemoveLoadingProc(); SetNotify("error", "Network related issues may caused.."); }
+                }).complete(function () { RemoveLoadingProc(); });
+            });
+        </script>
+    </div>
+</div>

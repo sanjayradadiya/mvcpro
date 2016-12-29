@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "ProcessDetails";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+
+@{
+    var StatusList = new SelectList(
+        new List<SelectListItem>
+        {
+            new SelectListItem {Text = "Y", Value = "Y"},
+            new SelectListItem {Text = "N", Value = "N"},
+        }, "Value", "Text");
+}
+
+@{
+    var FanacyStatus = new SelectList(
+        new List<SelectListItem>
+        {
+            new SelectListItem {Text = "Yes", Value = "Y"},
+            new SelectListItem {Text = "No", Value = "N"},
+        }, "Value", "Text");
+}
+
+@Styles.Render("~/Content/datatable_css")
+<link href="~/Content/Custom/processes.css" rel="stylesheet" />
+<link href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/Custom/custom-table.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/datatable")
+
+@*<script src="~/Scripts/JDatatables11012/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/JDatatables11012/js/dataTables.jqueryui.min.js"></script>
+<link href="~/Content/Custom/processes.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/dataTables.jqueryui.min.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/select.jqueryui.min.css" rel="stylesheet" />*@
+
+<div class="col-md-12">
+    <div class="titlesbar">
+        <div class="col-md-2 caption">
+            <i class="fa fa-user font-yellow-crusta" aria-hidden="true"></i>
+            <span class="text-uppercase">Color Details</span>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div id="ProcessResults" class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class=" row-fluid col-md-2">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills">
+                        <li>
+                            <div class="form-group">
+                                <label class="control-label">Is Fancy? </label>
+                                @Html.DropDownList("FancyStatus", FanacyStatus, "All", new { @class = "invselector" })
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-group">
+                                <button class="btn btn-themed " id="addColor" title="Add New Color"><i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Add New Color</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row-fluid col-md-10">
+                <table id="ColorView" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 125px;"></th>
+                            <th style="width: 125px;"></th>
+                            <th>Color Name</th>
+                            <th>Short Name</th>
+                            <th>Order</th>
+                            <th>Status</th>
+                            <th>Is Fancy?</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row-fluid col-md-12">
+                @Html.Hidden("ActMethod", "ColorDets")
+            </div>
+        </div>
+    </div>
+
+    <div id="procModal" class="popup" style="display: none;">
+        <div class="popupcon popupmodal">
+            <a class="popupclose" href="javascript:void(0);"><i class="fa fa-close"></i></a>
+            <div class="popuphead">Process Details</div>
+            <div class="popupcenter">
+                <form id="frmProc">
+                    <div class="row-fluid">
+                        <div class="col-md-12">
+                            @Html.Label("Process Name", new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12">
+                            @Html.TextBox("mPrcNm", null, new { @class = "form-control invselector", placeholder = "Write Process Name here" })
+                        </div>
+                        <div class="col-md-12">
+                            @Html.Label("Short Name", new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12">
+                            @Html.TextBox("mPrcShortNm", null, new { @class = "form-control invselector", placeholder = "Write Process Short Name here" })
+                        </div>
+                        <div class="col-md-12">
+                            @Html.Label("Order", new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12">
+                            @Html.TextBox("mPrcOrd", null, new { @class = "form-control invselector", min = "1", max = "999", type = "number", placeholder = "Write Process Order here" })
+                        </div>
+                        <div class="col-md-12">
+                            @Html.Label("Status", new { @class = "control-label" })
+                        </div>
+                        <div class="col-md-12 spacer10">
+                            @Html.DropDownList("mPrcStatus", StatusList, new { @class = "invselector" })
+                        </div>
+                        <div class="col-md-12 spacer10">
+                            @Html.DropDownList("mPrcIsFancy", FanacyStatus, new { @class = "invselector" })
+                            @Html.Hidden("mProcEvent")
+                            @Html.Hidden("PrcId")
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="popupfoot">
+                <div class="float-right">
+                    <a href="javascript:void(0);" id="btnSave" data-response-val="#respAlert" data-request-url="@Url.Action("HandleColors", "Process")" class="btn btn-themed">
+                        <i class="fa fa-check-circle"></i>&nbsp;Save</a>
+                    <a href="javascript:void(0);" id="btnCancel" class="btn btn-default cancel">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var curgrid = '#ColorView';
+        $(document).ready(function () {
+            setCookie("clid", " ", -1);
+            var sMethod = $("#ActMethod").val(); urlReq = '@Url.Action("serverMethod")';
+            var oTable = drawDataTable();
+            $('#FancyStatus').on('change', function (e) { var info = { "name": "isfancy", value: $(this).val() }; drawDataTable(info); });
+            function drawDataTable(additionalData) {
+                /*SetLoadingProc();*/
+                var oTable = $(curgrid).DataTable({
+                    oLanguage: { sProcessing: "<img src='../../Content/images/loader.gif'>" },
+                    bProcessing: true, serverSide: true, bSort: false,
+                    sAjaxSource: urlReq.replace("serverMethod", sMethod),
+                    aLengthMenu: [25, 50, 100], iDisplayLength: 25, bLengthChange: true,
+                    bDestroy: true, sEmptyTable: "Loading data from server",
+                    searching: false, bAutoWidth: false, paging: true,
+                    scrollX: true, scrollY: "395px", stateSave: false,
+                    fnServerData: function (sSource, aaData, fnCallback) {
+                        if (additionalData != undefined) { aaData.push(additionalData); }
+                        $.ajax({ "dataType": 'json', "type": "POST", "url": sSource, "data": aaData, "success": fnCallback }).complete(function () { /*RemoveLoadingProc();*/ });
+                    },
+                    fnCreatedRow: function (nRow, aData, iDataIndex) {
+                        $(nRow).attr('id', aData[7])
+                        $('td:eq(0)', nRow).html('<a class="btn btn-primary btn-action btnedit" href="javascript:void(0)" onclick="procDets(this)" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>');
+                        $('td:eq(1)', nRow).html('<a class="btn btn-danger btn-action" href="javascript:void(0)" title="Hapus" onclick="prodDel(this)"><i class="glyphicon glyphicon-trash"></i></a>');
+                    }
+                });
+                return oTable;
+            }
+
+            $('#addColor').on('click', function () { $('#frmProc')[0].reset(); $('#PrcId').val("0"); $("#mProcEvent").val("0"); callPopup(); });
+
+            $('#btnSave').on('click', function (e) {
+                var flag = validateForm();
+                if (flag != true) { return false; } var disables = 0; var disabled;
+                if ($('#frmProc').find(':input:disabled').length > 0) { disabled = $('#frmProc').find(':input:disabled').removeAttr('disabled'); disables++; }
+                $.ajax({
+                    url: '@Url.Action("HandleColors", "Process")', type: 'POST', datatype: 'JSON',
+                    data: $('#frmProc').serialize() + '&procflag=' + $("#mProcEvent").val(),
+                    success: function (data) { if (!data.isError) { /*$('#frmProc')[0].reset();*/ alert(data.msg); $('#FancyStatus').change(); } else { alert(data.msg); } },
+                    error: function () { alert('Something went wrong..'); }
+                }); disables > 0 ? disabled.attr('disabled', 'disabled') : null;
+            });
+
+            $('#frmProc input').on('focus', function (e) { $(this).removeAttr('required'); });
+            $('#frmProc select').on('focus', function (e) { $(this).removeAttr('required'); });
+        });
+    </script>
+    <script src="~/Scripts/Custom/colordets.js"></script>
+</div>

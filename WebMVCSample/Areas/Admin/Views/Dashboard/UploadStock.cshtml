@@ -1,0 +1,345 @@
+﻿@using WebInventory.Common;
+@{
+    ViewBag.Title = "UploadStock";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+
+@Styles.Render("~/Content/fileInputBundle");
+
+<style type="text/css">
+    /*-------------------upload file*/
+    .wizard .nav-tabs {
+        position: relative;
+        margin-bottom: 0;
+        border-bottom-color: #e0e0e0;
+    }
+
+    .wizard > div.wizard-inner {
+        position: relative;
+    }
+
+    .connecting-line {
+        height: 2px;
+        background: #e0e0e0;
+        position: absolute;
+        width: 70%;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        top: 50%;
+        z-index: 1;
+    }
+
+    .wizard .nav-tabs > li.active > a, .wizard .nav-tabs > li.active > a:hover, .wizard .nav-tabs > li.active > a:focus {
+        color: #555555;
+        cursor: default;
+        border: 0;
+        border-bottom-color: transparent;
+    }
+
+    span.round-tab {
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        display: inline-block;
+        border-radius: 100px;
+        background: #fff;
+        border: 2px solid #e0e0e0;
+        z-index: 2;
+        position: absolute;
+        left: 0;
+        text-align: center;
+        font-size: 25px;
+    }
+
+        span.round-tab i {
+            color: #555555;
+        }
+
+    .wizard li.active span.round-tab {
+        background: #fff;
+        border: 2px solid #6668c0;
+    }
+
+        .wizard li.active span.round-tab i {
+            color: #6668c0;
+        }
+
+    span.round-tab:hover {
+        color: #333;
+        border: 2px solid #333;
+    }
+
+    .wizard .nav-tabs > li {
+        width: 33%;
+    }
+
+    .wizard li:after {
+        content: " ";
+        position: absolute;
+        left: 46%;
+        opacity: 0;
+        margin: 0 auto;
+        bottom: 0px;
+        border: 5px solid transparent;
+        border-bottom-color: #6668c0;
+        transition: 0.1s ease-in-out;
+    }
+
+    .wizard li.active:after {
+        content: " ";
+        position: absolute;
+        left: 46%;
+        opacity: 1;
+        margin: 0 auto;
+        bottom: 0px;
+        border: 10px solid transparent;
+        border-bottom-color: #6668c0 /*#5bc0de*/;
+    }
+
+    .wizard .nav-tabs > li a {
+        width: 70px;
+        height: 70px;
+        margin: 20px auto;
+        border-radius: 100%;
+        padding: 0;
+    }
+
+        .wizard .nav-tabs > li a:hover {
+            background: transparent;
+        }
+
+    .wizard .tab-pane {
+        position: relative;
+        padding-top: 2%;
+    }
+
+    .wizard h3 {
+        margin-top: 0;
+    }
+
+    @@media (max-width:585px) {
+        .wizard {
+            width: 90%;
+            height: auto !important;
+        }
+
+        span.round-tab {
+            font-size: 16px;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+        }
+
+        .wizard .nav-tabs > li a {
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+        }
+
+        .wizard li.active:after {
+            content: " ";
+            position: absolute;
+            left: 35%;
+        }
+    }
+
+    /*------------------column map*/
+    label.required:after {
+        content: " *";
+        color: red;
+    }
+
+    label {
+        padding-left: 8px !important;
+    }
+
+    .mappers {
+        overflow-y: auto;
+        margin-bottom: .6%;
+    }
+
+    .coltitle {
+        text-align: center;
+        font: bold 13px verdana;
+        border-bottom: 1px dotted #4800ff;
+        margin-bottom: 0.6%;
+        padding: 0.4% 0%;
+    }
+
+    .invselector {
+        margin-bottom: 2% !important;
+    }
+
+    .errSelector {
+        border-color: #f79c9c !important;
+        box-shadow: 0 3px 0 rgba(255, 125, 125, 0.95),0 -1px rgba(255, 125, 125, 0.95) inset !important;
+        background: transparent !important;
+    }
+
+    @@media (width:415px) to (width:767px) {
+        .invselector {
+            font-size: 11px !important;
+            line-height: 18px;
+        }
+    }
+
+    @@media (max-width:414px) {
+        .invselector {
+            font-size: 8px !important;
+            line-height: 18px;
+        }
+    }
+
+    .panel-body {
+        background-color: transparent;
+    }
+
+    .panel {
+        margin-bottom: 1% !important;
+    }
+</style>
+
+<script src="~/Scripts/fileUploader/fileinput.js"></script>
+<div class="container">
+    <div class="col-md-12">
+        <div class="row shadow">
+            <div class="container-fluid">
+                <div class="wizard">
+                    <div class="wizard-inner">
+                        <div class="connecting-line"></div>
+                        <ul class="nav nav-tabs" role="tablist">
+
+                            <li role="presentation" class="active">
+                                <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
+                                    <span class="round-tab">
+                                        <i class="glyphicon glyphicon-folder-open"></i>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li role="presentation" class="disabled">
+                                <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
+                                    <span class="round-tab">
+                                        <i class="glyphicon glyphicon-pencil"></i>
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li role="presentation" class="disabled">
+                                <a href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Complete">
+                                    <span class="round-tab">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <form role="form">
+                        <div class="tab-content">
+                            <div class="tab-pane active" role="tabpanel" id="step1">
+
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="col-md-12 titlesbar">
+                                        <div class="caption"><i class="fa fa-cloud-upload"></i><span style="padding-right: 6px;"></span>Website Excel Data Importer</div>
+                                    </div>
+                                    <div class="col-md-12" style="color: #aaa;">
+                                        <span style="font: bold 11px verdana;">Instructions</span>
+                                        <ul>
+                                            <li>You can access it by simply drag and drop</li>
+                                            <li>(Or) You can simply browse the file which you want to upload</li>
+                                            <li>Accepts Only Excel files with extension .xlsx</li>
+                                            <li>Data will be retained for Next new upload.</li>
+                                            <li>Previous data will not be hold by website.</li>
+                                            <li>Previous data can not be recovered</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 col-sm-12">
+                                    <div class="col-md-12 bhoechie-tab-container">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bhoechie-tab panel-uploads">
+                                            <!-- File section -->
+                                            <div class="bhoechie-tab-content active">
+                                                <form enctype="multipart/form-data">
+                                                    <label>Excel Stock File Uploader</label>
+                                                    <input id="file-excel" name="file-excel[]" type="file" multiple>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" role="tabpanel" id="step2">
+                                <div class="tabColsMap"></div>
+                            </div>
+
+                            <div class="tab-pane" role="tabpanel" id="complete">
+                                <div class="tabFinal"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $('#file-excel').fileinput({
+            language: 'fr', type: 'POST',
+            uploadUrl: '@Url.Action("UploadStock", "Dashboard")',
+            allowedFileExtensions: ['xlsx'],
+            maxFileCount: 1, uploadAsync: true,
+            msgSizeTooLarge: "File {name} ({size} KB) exceeds maximum upload size of {maxSize} KB. Please Try again",
+            msgFilesTooMany: "Number of Files selected for upload ({n}) exceeds maximum allowed limit of {m}",
+            msgInvalidFileType: 'Invalid type for file "{name}". Only {types} files are supported.',
+            msgInvalidFileExtension: 'Invalid extension for file {name}. Only "{extensions} files are supported.',
+        });
+
+        $('#file-excel').on('fileuploaded', function (event, data, previewId, index) {
+            response = data.response;
+            if (response.isError == false) {
+                var $active = $('.wizard .nav-tabs li.active');
+                $active.next().removeClass('disabled');
+                nextTab($active);
+                $(".tabColsMap").load('@Url.Action("ColumnMap")').fadeIn('slow').fadeIn(5000);
+            }
+            else { alert('Something went wrong'); }
+        });
+
+        $(document).ready(function () {
+            //Initialize tooltips
+            $('.nav-tabs > li a[title]').tooltip();
+
+            //Wizard
+            $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+
+                var $target = $(e.target);
+
+                if ($target.parent().hasClass('disabled')) {
+                    return false;
+                }
+            });
+
+            $(".next-step").click(function (e) {
+                var $active = $('.wizard .nav-tabs li.active');
+                $active.next().removeClass('disabled');
+                nextTab($active);
+            });
+            $(".prev-step").click(function (e) {
+                var $active = $('.wizard .nav-tabs li.active');
+                prevTab($active);
+            });
+        });
+
+        function nextTab(elem) {
+            $(elem).next().find('a[data-toggle="tab"]').click();
+        }
+        function prevTab(elem) {
+            $(elem).prev().find('a[data-toggle="tab"]').click();
+        }
+    </script>
+    <script src="~/Scripts/Custom/CustomfileInput.js"></script>
+</div>

@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "Email Subscribers";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+
+@{ 
+    var ssStatus = new SelectList(
+    new List<SelectListItem>
+        {
+            new SelectListItem {Text = "Yes", Value = "Y"},
+            new SelectListItem {Text = "No", Value = "N"},
+        }, "Value", "Text");
+}
+
+@Styles.Render("~/Content/datatable_css")
+<link href="~/Content/Custom/processes.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/datatable")
+
+@*<script src="~/Scripts/JDatatables11012/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/JDatatables11012/js/dataTables.jqueryui.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.24.min.js"></script>
+<link href="~/Content/Custom/processes.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/dataTables.jqueryui.min.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/select.jqueryui.min.css" rel="stylesheet" />*@
+
+<style>
+    table.dataTable thead th {
+        text-align: center !important;
+    }
+
+    table.dataTable tbody td {
+        text-align: center !important;
+    }
+
+        table.dataTable tbody td:nth-child(2) {
+            text-align: left !important;
+        }
+</style>
+
+<div class="col-md-12">
+    <div class="titlesbar">
+        <div class="col-md-6 caption">
+            <i class="fa fa-user font-yellow-crusta" aria-hidden="true"></i><span class="text-uppercase">&nbsp;Email SubScribers</span>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div id="SubSrcibersResults" class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row-fluid col-md-12">
+                <div class="col-md-1"></div>
+                <div class="col-md-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-justified">
+                            <label class="control-label ftitle">Status</label>
+                        </li>
+                        <li class="nav-justified">
+                            <div class="form-group">
+                                @Html.DropDownList("ssStatus", ssStatus, "All", new { @class = "invselector" })
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <table id="SubSrcibersView" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>SrNo.</th>
+                                <th>Email Id</th>
+                                <th>RegisteredOn</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row-fluid col-md-12">
+        @Html.Hidden("ActMethod", "EmailSubSrcbDets")
+    </div>
+
+    <script language="javascript" type="text/javascript">
+        var curgrid = '#SubSrcibersView';
+        $(document).ready(function () {
+            var sMethod = $("#ActMethod").val(); urlReq = '@Url.Action("serverMethod")';
+            var oTable = drawDataTable();
+            /*-------------------------------------*/
+            function drawDataTable(additionalData) {
+                /*SetLoadingProc();*/
+                var oTable = $(curgrid).DataTable({
+                    oLanguage: { sProcessing: "<img src='../../Content/images/loader.gif'>" },
+                    bProcessing: true, serverSide: true, bSort: false, sAjaxSource: urlReq.replace("serverMethod", sMethod),
+                    aLengthMenu: [25, 50, 100], iDisplayLength: 25, bLengthChange: true, bDestroy: true, bAutoWidth: false,
+                    sEmptyTable: "Loading data from server", searching: false, paging: true, scrollX: true, scrollY: "395px",
+                    stateSave: false,
+                    fnServerData: function (sSource, aaData, fnCallback) {
+                        if (additionalData != undefined) { aaData.push(additionalData[0]); aaData.push(additionalData[1]); }
+                        $.ajax({ "dataType": 'json', "type": "POST", "url": sSource, "data": aaData, "success": fnCallback }).complete(function () { /*RemoveLoadingProc();*/ });
+                    },
+                    fnCreatedRow: function (nRow, aData, iDataIndex) { $(nRow).attr('id', aData[1]) },
+                }); return oTable;
+            }
+
+            $('#ssStatus').change(function () {
+                additionalData = [{ name: "ssStatus", value: $(this).val() }];
+                drawDataTable(additionalData)
+            });
+        });
+    </script>
+    <link href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/Custom/custom-table.css" rel="stylesheet" />
+</div>

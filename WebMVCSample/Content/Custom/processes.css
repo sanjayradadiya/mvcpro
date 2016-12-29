@@ -1,0 +1,45 @@
+﻿.btn-action {
+    padding: 2px 4px;
+    font-size: 9px;
+}
+
+.panel-body {
+    background-color: #f3f3ff;
+}
+
+.invselector {
+    margin-bottom: 5%;
+    box-shadow: 0 3px 0 rgba(100,99,177,.43),0 -1px rgba(100,99,177,.26) inset;
+    background: #fbfbfb;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #dcdceb;
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    color: #808080;
+    height: 28px;
+}
+
+    .invselector input {
+        cursor: auto !important;
+    }
+
+table.dataTable tbody td:nth-child(1), td:nth-child(2) {
+    text-align: center !important;
+}
+
+.prcDisable {
+    cursor: not-allowed;
+}
+
+input:required, select:required {
+    border: 1px solid #fb758a;
+    background: rgba(255,0,0,0.1);
+}
+
+.ftitle {
+    line-height: 28px;
+    content: ' ';
+    padding-right: 4px;
+}

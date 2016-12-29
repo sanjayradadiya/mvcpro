@@ -1,0 +1,196 @@
+﻿@{
+    ViewBag.Title = "ClientDetails";
+    Layout = "~/Views/Shared/_cpLayout.cshtml";
+}
+
+@Styles.Render("~/Content/datatable_css")
+<link href="~/Content/Custom/clientDets.css" rel="stylesheet" />
+<link href="~/Content/Fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/Custom/custom-table.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/datatable")
+
+@*<script src="~/Scripts/JDatatables11012/js/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/JDatatables11012/js/dataTables.jqueryui.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.24.min.js"></script>
+<link href="~/Content/Custom/clientDets.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/dataTables.jqueryui.min.css" rel="stylesheet" />
+<link type="text/css" href="~/Content/JDatatables11012/css/select.jqueryui.min.css" rel="stylesheet" />*@
+
+<div class="col-md-12">
+    <div class="titlesbar">
+        <div class="col-md-2 caption">
+            <i class="fa fa-user font-yellow-crusta" aria-hidden="true"></i><span class="text-uppercase">Client Details</span>
+        </div>
+        <div class="col-md-4">
+            <ul class="nav nav-pills" style="float: left;">
+                @*<li>@Html.Label("User Levels", new { @class = "control-label" }) </li>*@
+                <li>@Html.DropDownList("UserType", ViewBag.UserLevels as IEnumerable<SelectListItem>, "User Levels", new { @class = "invselector" })</li>
+                @*<li>@Html.Label("User Status", new { @class = "control-label" }) </li>*@
+                <li>@Html.DropDownList("UserStatus", ViewBag.UserStatus as IEnumerable<SelectListItem>, "Status", new { @class = "invselector" })</li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <ul class="nav nav-pills" style="float: left;">
+                @*<li>@Html.Label("Login Name", new { @class = "control-label" }) </li>*@
+                <li>@Html.TextBox("txtLoginNm", null, new { @class = "invselector", placeholder = "LoginName to Search", style = "width:15em;" })</li>
+                <li><a class="btn btn-themed" id="btnSearch" data-request-url="@Url.Action("ClientExportExcel", "Account")" >Search</a></li>
+            </ul>
+        </div>
+        <div class="col-md-2">
+            <ul class="nav nav-pills" style="float: right;">
+                <li><a class="btn btn-themed" id="ExportToExcel" data-request-url="@Url.Action("ClientExportExcel", "Account")" >Excel</a></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div id="ClientResults">
+    <div class="row-fluid col-md-12">
+        <table id="clientmasView" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <div class="checkall">
+                            <input type="checkbox" name="selectAll" id="chkAll">
+                        </div>
+                    </th>
+                    <th style="width: 125px;">&nbsp;</th>
+                    <th style="width: 125px;">&nbsp;</th>
+                    <th>Login Name</th>
+                    <th>Client Name</th>
+                    <th>Sales Man</th>
+                    <th>Handling Location</th>
+                    <th>Last Login DateTime</th>
+                    <th>Company</th>
+                    <th>Designation</th>
+                    <th>Contact No.</th>
+                    <th>Website</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Status</th>
+                    <th>Appointment Request</th>
+                    <th>New Arrival Email?</th>
+                    <th>Cart</th>
+                    <th>Order</th>
+                    <th>WatchList</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row-fluid col-md-12">
+        @Html.Hidden("ActMethod", "ClientDetails")
+    </div>
+
+    <script language="javascript" type="text/javascript">
+        var curgrid = '#clientmasView';
+        $(document).ready(function () {
+            var sMethod = $("#ActMethod").val(); urlReq = '@Url.Action("serverMethod")';
+            var oTable = drawDataTable();
+
+            /*Handle selection by table cell checkBox click */
+            $(curgrid + ' tbody').on('click', 'input[type="checkbox"]', function (e) {
+                var row = $(this).closest('tr'); selUpdate(this, row, 'clid')
+                this.checked ? row.addClass('selected') : row.removeClass('selected');
+                updateDataTableSelectAllCtrl(oTable); e.stopPropagation();
+            });
+
+            /*Handle click on table cells with checkboxes*/
+            $(curgrid).on('click', 'tbody td', function (event) {
+                if ($(this).hasClass('Expand')) {
+                    if ($(event.target).find('input[type=checkbox],a').length > 0 | $(event.target).hasClass('details-control') | $(event.target).is('a')) { return; }
+                    var expander = $(this).closest('tr').find('td.details-control');
+                    activateChild(expander);
+                }
+            });
+
+            oTable.on('draw', function () { updateDataTableSelectAllCtrl(oTable); });
+
+            $('thead input[name="selectAll"]').on('change', function (e) {
+                if (rows_selected == null) rows_selected = []; var rows = $(curgrid).dataTable().fnGetNodes();
+                if (this.checked) { for (var i = 0; i < rows.length; i++) { var chk = $(rows[i]).find('input[name=checkCl]'); if (!$(chk).prop('checked')) $(chk).click(); } }
+                else { for (var i = 0; i < rows.length; i++) { var chk = $(rows[i]).find('input[name=checkCl]'); if ($(chk).prop('checked')) $(chk).click(); } } e.stopPropagation();
+            });
+
+            /*---------------------showing Loading Process */
+            function updateDataTableSelectAllCtrl(table) {
+                var $table = table.table().node(); var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+                var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table); var chkbox_select_all = $('thead input[name="selectAll"]', $table).get(0);
+                var chkbox_header = $('.dataTables_scrollHeadInner table thead tr input[type="checkbox"]');
+
+                if ($chkbox_checked.length === 0) {
+                    chkbox_select_all.checked = false; $(chkbox_header).prop('checked', false);
+                    if ('indeterminate' in chkbox_select_all) { chkbox_select_all.indeterminate = false; }
+                } else if ($chkbox_checked.length === $chkbox_all.length) {
+                    chkbox_select_all.checked = true; $(chkbox_header).prop('checked', true);
+                    if ('indeterminate' in chkbox_select_all) { chkbox_select_all.indeterminate = false; }
+                } else {
+                    chkbox_select_all.checked = false; $(chkbox_header).prop('checked', false);
+                    if ('indeterminate' in chkbox_select_all) { chkbox_select_all.indeterminate = true; }
+                }
+            }
+            /*-------------------------------------*/
+
+            $('#ExportToExcel').on('click', function (e) { $.ajax({ url: $(this).data('request-url'), datatype: 'json', type: "POST", contentType: 'application/json; charset=utf-8', success: function (data) { window.location = '@Url.Action("ClientExportExcel", "Account")'; }, error: function () { alert('Something went wrong..'); } }); });
+            $('#btnSearch').on('click', function (e) { var info = [{ "name": "uName", value: $('#txtLoginNm').val() }]; drawDataTable(info); });
+            $('#UserType').on('change', function (e) { var info = [{ "name": "uLevel", value: $(this).val() }, { "name": "uStatus", value: $('#UserStatus').val() }]; drawDataTable(info); });
+            $('#UserStatus').on('change', function (e) { var info = [{ "name": "uStatus", value: $(this).val() }, { "name": "uLevel", value: $('#UserType').val() }]; drawDataTable(info); });
+
+            function drawDataTable(additionalData) {
+                /*SetLoadingProc();*/
+                var oTable = $(curgrid).DataTable({
+                    oLanguage: { sProcessing: "<img src='../../Content/images/loader.gif'>" },
+                    bProcessing: true, serverSide: true, bSort: false, sAjaxSource: urlReq.replace("serverMethod", sMethod),
+                    aLengthMenu: [25, 50, 100], iDisplayLength: 25, bLengthChange: true, bDestroy: true, bAutoWidth: false,
+                    sEmptyTable: "Loading data from server", searching: false, paging: true, scrollX: true, scrollY: "395px",
+                    stateSave: false,
+                    fnServerData: function (sSource, aaData, fnCallback) {
+                        if (additionalData != undefined) { aaData.push(additionalData[0]); aaData.push(additionalData[1]); }
+                        $.ajax({ "dataType": 'json', "type": "POST", "url": sSource, "data": aaData, "success": fnCallback }).complete(function () { /*RemoveLoadingProc();*/ });
+                    },
+                    fnCreatedRow: function (nRow, aData, iDataIndex) {
+                        $(nRow).attr('id', aData[21])
+                        $('td:eq(0)', nRow).html('<input type="checkbox" name="checkCl" id="checkCl" class="checkbox" value="' + aData[21] + '">');
+                        $('td:eq(1)', nRow).html('<a class="btn btn-primary btn-action" href="javascript:void(0)" title="Edit" onclick="getClientDet(' + aData[21] + ')"><i class="glyphicon glyphicon-pencil"></i></a>');
+                        $('td:eq(2)', nRow).html('<a class="btn btn-danger btn-action" href="javascript:void(0)" title="Hapus" onclick="removeClient(' + aData[21] + ')"><i class="glyphicon glyphicon-trash"></i></a>');
+                    },                    rowCallback: function (row, data, dataIndex) { var rowId = data[21]; if ($.inArray(rowId, rows_selected) !== -1) { $(row).find('input[type="checkbox"]').prop('checked', true); $(row).addClass('selected'); } }
+                }); return oTable;
+            }
+
+            $("#txtLoginNm").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "@Url.Action("LoginNames", "Account")", type: "POST", dataType: "json", data: { Prefix: request.term },
+                        success: function (data) { response($.map(data, function (item) { return { label: item.Name, value: item.Name }; })) }
+                    })
+                },
+                messages: { noResults: "", results: "" }
+            });
+        });
+
+        function getClientDet(rowId) {
+            if (rowId != '') {
+                var params = { 'rowid': rowId, 'clname': $('#clientmasView tr[id*=' + rowId + ']').find('td:nth-child(4)').html() }
+                $.ajax({
+                    url: '@Url.Action("EditClient", "Account")', type: 'POST', datatype: 'JSON', data: params,
+                    success: function (data) { if (!data.isError) { window.open("@Url.Action("EditClient", "Account")", '_blank'); } else { alert('Something went wrong ,please try again..'); } },
+                    error: function () { alert('Something went wrong..'); }
+                });
+            } return false;
+        }
+        function removeClient(rowId) {
+            if (rowId != '') {
+                var ret = confirm('Are you sure to remove this client profile'); if (ret == false) return false;
+                var params = { 'cid': rowId, 'clname': $('#clientmasView tr[id*=' + rowId + ']').find('td:nth-child(4)').html() }
+                $.ajax({
+                    url: '@Url.Action("avoidClient", "Account")', type: 'POST', datatype: 'JSON', data: params,
+                    success: function (data) { alert(data); }, error: function () { alert('Something went wrong..'); }
+                });
+            } return false;
+        }
+    </script>
+    <script src="~/Scripts/Custom/jscommon.js"></script>
+</div>

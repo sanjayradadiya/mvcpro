@@ -1,0 +1,77 @@
+﻿<style type="text/css">
+    .dettable td, th {
+        padding: 3px !important;
+    }
+
+    .dettable th {
+        background-color: #e5e5ff;
+    }
+
+    .dettable tbody tr:hover {
+        background: #ffd6e0;
+        color: #000;
+    }
+
+    .static_td {
+        max-width: 30px;
+        text-align: center;
+    }
+
+    .round-span {
+        background-color: #0094ff;
+        color: white;
+        width: 100px;
+        line-height: 100px;
+        display: inline-block;
+        border-radius: 100px;
+        left: 0;
+        font-size: 30px;
+    }
+</style>
+<div class="container">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="container-fluid" style="margin: 0 auto;">
+            @if (ViewBag.ErrorLogs != null)
+            {
+                string res = string.Empty;
+                res = "<table class='table table-bordered dettable'><thead>";
+                res += "<tr><th class='static_td'>RowNo.</th><th>Error Description</th></tr></thead><tbody>";
+                foreach (var item in (Dictionary<string, string>)ViewBag.ErrorLogs)
+                {
+                    res += string.Format("<tr><td class='static_td'>{0}</td><td>{1}</td></tr>", item.Key, item.Value);
+                }
+                res += "</tbody></table>";
+    
+                @Html.Raw(res);
+            }
+            else
+            { 
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="container-fluid">&nbsp;</div>
+                        <div class="container-fluid">&nbsp;</div>
+                        <div class="container-fluid">
+                            <div class="col-md-12 text-center">
+                                <span class="round-span">
+                                    <i class="glyphicon glyphicon-ok"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="col-md-12 text-center">
+                                <h2>File Synchronize to Website Succeeded</h2>
+                            </div>
+                        </div>
+                        <div class="container-fluid">&nbsp;</div>
+                        <div class="container-fluid">&nbsp;</div>
+                        <div class="container-fluid">&nbsp;</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+
